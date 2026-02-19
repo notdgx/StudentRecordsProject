@@ -1,73 +1,10 @@
 #include <iostream>
 #include <string>
+#include "subjects.cpp"
+#include "courses.cpp"
+
 
 using namespace std;
-
-class Subject
-{
-
-private: 
-    string sub_name;
-    int sub_code;
-    int sub_total_marks;
-    int sub_obtained_mark;
-
-public:
-
-    Subject(){}
-
-    Subject(string NAME, int CODE, int TotalMARKS, int ObtainedMARKS)
-    {
-        setsubame(NAME);
-        setsubcode(CODE);
-        setsubtotalmarks(TotalMARKS);
-        setsubobtainedmarks(ObtainedMARKS);
-    }
-
-    // GETTERRRRR
-
-    string getsubname()
-    {
-        return sub_name;
-    }
-
-    int getsubcode()
-    {
-        return sub_code;
-    }
-
-    int getsubtotalmarks()
-    {
-        return sub_total_marks;
-    }
-
-    int getsubobtainedmarks()
-    {
-        return sub_obtained_mark;
-    }
-
-    // SETTERRRRR
-
-    void setsubame(const string name)
-    {
-        sub_name = name;
-    }
-
-    void setsubcode(int code)
-    {
-        sub_code = code;
-    }
-
-    void setsubtotalmarks(int totalmarks)
-    {
-        sub_total_marks = totalmarks;
-    }
-
-    void setsubobtainedmarks(int obtainedmarks)
-    {
-        sub_obtained_mark = obtainedmarks;
-    }
-};
 
 
 class Students
@@ -200,9 +137,9 @@ public:
             
         }
         
-        else if (Flag=1){
+        else if (Flag==1){
             
-            if (ObtainedMarks <= 100 && ObtainedMarks >= 0)
+            if (ObtainedMarks <= sub[i].getsubtotalmarks() && ObtainedMarks >= 0)
             {
                 cout << "Obtained Marks Updated for Subject : "<<sub[i].getsubname() << " And Subject Code : " << sub[i].getsubcode() << " | From : "<<sub[i].getsubobtainedmarks() <<" --> " << ObtainedMarks <<" |"<<endl;
                 sub[i].setsubobtainedmarks(ObtainedMarks);
@@ -366,10 +303,10 @@ int main()
     cout<<tmp.getsubcode()<<endl;
     cout<<tmp.getsubobtainedmarks()<<endl;
     cout<<tmp.getsubtotalmarks()<<endl;
+ 
 
 
-
-
+ 
     // STUDENT BY TEMPLEATE with mistakes 
     
     // Students s2("Ram","BCAsem2d");
