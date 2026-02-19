@@ -9,22 +9,24 @@ class Subject
 private: 
     string sub_name;
     int sub_code;
-    int sub_total_marks;
-    int sub_obtained_mark;
+    int sub_totalmarks;
+    int sub_obtainedmarks;
+    int sub_credits;
 
 public:
 
     Subject(){}
 
-    Subject(string NAME, int CODE, int TotalMARKS, int ObtainedMARKS)
+    Subject(string sub_name, int sub_code, int sub_totalmarks = 100, int sub_obtainedmarks = 0 , int sub_credits = 1 )
     {
-        setsubame(NAME);
-        setsubcode(CODE);
-        setsubtotalmarks(TotalMARKS);
-        setsubobtainedmarks(ObtainedMARKS);
+        setsubname(sub_name);
+        setsubcode(sub_code);
+        setsubtotalmarks(sub_totalmarks);
+        setsubobtainedmarks(sub_obtainedmarks);
+        setsubcredits(sub_credits);
     }
 
-    // GETTERRRRR
+    // GETTERS 
 
     string getsubname()
     {
@@ -38,17 +40,21 @@ public:
 
     int getsubtotalmarks()
     {
-        return sub_total_marks;
+        return sub_totalmarks;
     }
 
     int getsubobtainedmarks()
     {
-        return sub_obtained_mark;
+        return sub_obtainedmarks;
     }
 
-    // SETTERRRRR
+    int getsubcredits(){
+        return sub_credits;
+    }
 
-    void setsubame(const string name)
+    // SETTERRSS
+
+    void setsubname(const string name)
     {
         sub_name = name;
     }
@@ -60,11 +66,15 @@ public:
 
     void setsubtotalmarks(int totalmarks)
     {
-        sub_total_marks = totalmarks;
+        sub_totalmarks = totalmarks;
     }
 
     void setsubobtainedmarks(int obtainedmarks)
     {
-        sub_obtained_mark = obtainedmarks;
+        sub_obtainedmarks = obtainedmarks;
+    }
+
+    void setsubcredits(int credits){
+        sub_credits = credits ;
     }
 };
