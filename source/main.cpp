@@ -166,7 +166,7 @@ public:
     void changecoursesubject(int Index , string SubjectName ,int SubjectCode , int TotalMarks=100 , int ObtainedMarks=0){
 
         if (Index>0 && Index<=Nsubjects){
-            sub[Index-1].setsubame(SubjectName);
+            sub[Index-1].setsubname(SubjectName);
             sub[Index-1].setsubcode(SubjectCode);
             sub[Index-1].setsubobtainedmarks(ObtainedMarks);
             sub[Index-1].setsubtotalmarks(TotalMarks);
