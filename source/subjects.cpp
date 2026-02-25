@@ -7,7 +7,7 @@ class Subject
 {
 
 private: 
-    string sub_name;
+    char sub_name[20];
     int sub_code;
     int sub_totalmarks;
     int sub_obtainedmarks;
