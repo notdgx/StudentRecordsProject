@@ -1,24 +1,41 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <limits>
 #include "./subjects.cpp"
 
 namespace templates{
+    Subject enter_and_return_sub();
 
     void create_template(const std::string & template_name , int number_of_subjects = 10){
 
-        Subject subs[number_of_subjects];
+        // Subject * subs = new Subject[number_of_subjects];
+        // char replace;
+
+        ofstream file(template_name , ios::binary);
+
+
         for (int i = 0 ; i < number_of_subjects ; i++){
-            std::cout << "Enter the Subject " << i << " Details : \n" ;
+            std::cout << "Enter the Subject " << i+1 << " Details : \n" ;
             std::cout << "-----------------------------\n\n" ;
-            
+            Subject sub = templates::enter_and_return_sub();
+            file.write(reinterpret_cast<char*>(& sub),sizeof(sub));
             std::cout << "-----------------------------\n\n" ;
         }
 
+
+    
+        // delete[] subs;
+        // subs = nullptr;
+
     }
 
+    // Binary fiel Functions 
 
-    Subject enter_and_return(){
+    
+
+
+    Subject enter_and_return_sub(){
 
         Subject sub;
 
@@ -30,7 +47,6 @@ namespace templates{
 
     do {
         cout << "Enter the Subject Name: ";
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // .
         getline(cin, Esub_name);
 
         if (!Subject::verifyname(Esub_name)) {
@@ -41,7 +57,7 @@ namespace templates{
     
     } while (true);
 
-    sub.setsubname(Esub_name);
+        sub.setsubname(Esub_name);
 
         std::cout << "Enter the Subject Code : " ;
         std::cin >> Esub_code ;
@@ -59,8 +75,14 @@ namespace templates{
         std::cin >> Esub_credits ;
         sub.setsubcredits(Esub_credits);
 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // .
+
         return sub;
     }
 
 
+}
+
+int main(){
+    templates::create_template("aaa" , 8);
 }

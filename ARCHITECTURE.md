@@ -44,12 +44,7 @@
 - set email 
 - set phone no 
 - set address 
-- change sub 
-	- sub.change name 
-	- seb.change code
-	- sub.change total marks 
-	- sub.change obtained marks 
-	- sub.change credits 
+
 
 // Getters 
 
@@ -66,12 +61,7 @@
 - get Email
 - get Phone No 
 - get Address 
-- get sub 
-	- sub.get name 
-	- seb.get code
-	- sub.get total marks 
-	- sub.get obtained marks 
-	- sub.get credits 
+
 
 // Show Details 
 
@@ -86,6 +76,7 @@
 - create template `Binary File`
 - modify template 
 - delete Template 
+- enter_and_return_sub
 
 // Records Management 
 
@@ -100,4 +91,22 @@
 - get CGPA 
 - get Pass/Fail Status 
 - get avg marks 
+
+// Sub 
+
+- get sub 
+	- sub.get name 
+	- seb.get code
+	- sub.get total marks 
+	- sub.get obtained marks 
+	- sub.get credits 
+
+- change sub 
+	- sub.change name 
+	- seb.change code
+	- sub.change total marks 
+	- sub.change obtained marks 
+	- sub.change credits 
+
+- verifyname
 
