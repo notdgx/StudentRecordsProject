@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <cstring>
+
 
 using namespace std;
 
@@ -30,7 +32,7 @@ public:
 
     string getsubname()
     {
-        return sub_name;
+        return string(sub_name);
     }
 
     int getsubcode()
@@ -54,9 +56,18 @@ public:
 
     // SETTERRSS
 
-    void setsubname(const string name)
-    {
-        sub_name = name;
+    static bool verifyname(const string& name){
+        if (name.size() >= sizeof(sub_name))
+            return false;
+        return true;
+
+    }
+
+    void setsubname(string& name)
+    {   
+        if (verifyname(name)){
+        memset(sub_name, 0, sizeof(sub_name));
+        strcpy(sub_name, name.c_str());}
     }
 
     void setsubcode(int code)
