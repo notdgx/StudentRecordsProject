@@ -74,10 +74,22 @@
 - show template index
 - show template 
 - create template `Binary File`
+	- file_exist_check
+	- enter_and_return_sub
+
+- Template Index 
+	- Modifing
+		- add_template_index
+		- do_template_exist
+		- replace_template_index
+		- delete_template_index
+	- 
+
 - modify template 
 - delete Template 
 - enter_and_return_sub
-- file_exist_check
+
+
 
 // Records Management 
 
