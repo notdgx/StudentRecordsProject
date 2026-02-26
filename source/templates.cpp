@@ -9,6 +9,8 @@ namespace templates{
     Subject enter_and_return_sub();
     ofstream file_exists_check(const std::string & file_name );
 
+    // CREATE TEMPLATE 
+
     int create_template(const std::string & template_name , int number_of_subjects = 10){
 
 
@@ -27,11 +29,6 @@ namespace templates{
         else {
             return -1;
         }
-
-
-
-
-
     }
 
     ofstream file_exists_check(const std::string & file_name ){
@@ -103,6 +100,46 @@ namespace templates{
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // .
 
         return sub;
+    }
+
+    // TEMPLATE INDEX
+
+    void add_template_index(const std::string & template_name , int number_of_subjects){
+
+        ofstream file("../templates/00_templateindex" , ios::binary | ios::app );
+
+
+
+    }
+
+    int do_template_exist(const std::string & template_name){
+
+        ifstream file("../templates/00_templateindex", ios::binary);
+        
+        struct templateindex{
+        char template_name_in_index[20];
+        int template_N_in_index;
+        } T ;
+
+        int index=0;
+
+
+        if (!file){
+            return -1;
+        }
+
+        while(file.read(reinterpret_cast<char*>(&T), sizeof(T))){
+
+            file.read(reinterpret_cast<char*>(&T), sizeof(T));
+
+            if (std::string(T.template_name_in_index) == template_name){
+                return (int)file.tellg() - 24;
+            }
+        }
+
+        return -2;
+
+
     }
 
 
