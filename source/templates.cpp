@@ -4,6 +4,8 @@
 #include <limits>
 #include "./subjects.cpp"
 #include <iomanip>
+#include <filesystem>
+
 
 namespace templates{
 
@@ -13,14 +15,18 @@ namespace templates{
         };
 
     Subject enter_and_return_sub();
-    ofstream file_exists_check(const std::string & file_name );
+    ofstream file_exists_check(const std::string & file_name , int number_of_subjects );
+    int do_template_exist(const std::string & template_name);
+    void add_template_index(const std::string & template_name , int number_of_subjects);
+    void replace_template_index(const std::string & template_name , int number_of_subjects , int index);
+    void delete_template_index(int index);
 
     // CREATE TEMPLATE 
 
     int create_template(const std::string & template_name , int number_of_subjects = 10){
 
 
-        ofstream file = file_exists_check(template_name);
+        ofstream file = file_exists_check(template_name ,number_of_subjects);
         if (file.is_open()){
 
             for (int i = 0 ; i < number_of_subjects ; i++){
@@ -37,28 +43,85 @@ namespace templates{
         }
     }
 
-    ofstream file_exists_check(const std::string & file_name ){
+    // DELETEING TEMPLATE 
+
+    void delete_template(const std::string & template_name){
+        ifstream file(template_name);
+        char choice;
+        if (file.is_open()){
+            cout << "Are you Sure You want to delete this template ? (y/n) :";
+            cin >> choice ;
+            if (choice == 'y' || choice == 'Y'){
+                filesystem::remove(template_name);
+                templates::delete_template_index(do_template_exist(template_name));
+                cout << "Template Deleted ‖ ";
+            }
+            else{
+                cout << "Template Not Deleted";
+            }
+        }
+        
+    }
+
+    ofstream file_exists_check(const std::string & file_name, int number_of_subjects = -1)
+    // adding in index will active when no of subjects pssed
+    {
         char replace;
+        // char replaceT;
+        string template_name;
         ofstream file1;
         ifstream file(file_name);
 
         if (!file.is_open()){
             file1.open(file_name, ios::binary | ios::out | ios::trunc);
+            if (number_of_subjects != -1){
+                add_template_index(file_name , number_of_subjects);
+            }
             return file1;
         }
+
         else if(file.is_open())
         {
             cout << "File Exists Do You want to replace it ? (y/n) :";
             cin >> replace ;
 
-            if (replace == 'Y' || replace == 'y' || replace == ' ' || replace == '\n' ){
+            if (replace == 'Y' || replace == 'y' ){
                 file1.open(file_name, ios::binary | ios::out | ios::trunc);
+
+                // if (number_of_subjects != -1){
+                //     cout << "Do you want to change template name ? (Y/n):";
+                //     cin >> replaceT ;
+                //         if (replaceT == 'Y' || replaceT == 'y' ){
+                //             cout << "Enter new name of Template : ";
+                //             // cin.ignore(numeric_limits<streamsize>::max(), '\n'); // .
+                //             cin >> template_name;
+                //             replace_template_index(template_name , number_of_subjects , do_template_exist(file_name));}
+                //         // else {
+                //         //     replace_template_index(file_name , number_of_subjects , do_template_exist(file_name));}
+                //         }
+                //     // file index will always exists if we are replacing a file
+                
                 return file1;
             }
             else {
                 return file1;
             }
         }
+    }
+
+    // Return Tempalte for use
+
+    Subject * return_template_data(const std::string & template_name){
+        fstream file(template_name);
+        templateindex indexdata;
+        if (do_template_exist(template_name) != -1 && file.is_open()){
+            indexdata=give_template_data_at_index(do_template_exist(template_name));
+            Subject * subjects_data = new Subject[indexdata.template_N_in_index];
+            file.read(reinterpret_cast<char*>(&subjects_data), sizeof(subjects_data));
+            return subjects_data;
+        }
+
+
     }
 
 
@@ -113,23 +176,24 @@ namespace templates{
     // TEMPLATE INDEX SHOW 
 
     void show_template_index(){
-        templateindex data;
+        templates::templateindex data;
         ifstream file("../templates/00_templateindex", ios::binary);
 
         cout << " ------------------------------------- " << endl;
-        cout << "| Template Name      | No of Subjects |";
+        cout << "| Template Name      | No of Subjects |"<<endl;
         cout << " ------------------------------------- " << endl;
+
+
         while(file.read(reinterpret_cast<char *>(& data), sizeof(data))){
-            file.read(reinterpret_cast<char *>(& data), sizeof(data));
             
             if (data.template_name_in_index[0] == '\0' && data.template_N_in_index == 0){
                 cout <<"| " << std::left << std::setw(20) << "DELETED TEMPLATE"
-                << " | " << std::right << std::setw(12) << "0" << " | ";
+                << " | " << std::right << std::setw(12) << "0" << " | "<<endl;
             }
             
             else {
                 cout <<"| " << std::left << std::setw(20) << data.template_name_in_index
-                << " | " << std::right << std::setw(12) << data.template_N_in_index << " | ";
+                << " | " << std::right << std::setw(12) << data.template_N_in_index << " | "<<endl;
             }
             
         }
@@ -143,7 +207,7 @@ namespace templates{
 
     void add_template_index(const std::string & template_name , int number_of_subjects){
 
-        templateindex data;
+        templates::templateindex data;
         strcpy(data.template_name_in_index,template_name.c_str());
         data.template_N_in_index = number_of_subjects;
 
@@ -158,11 +222,10 @@ namespace templates{
     int do_template_exist(const std::string & template_name){
 
         ifstream file("../templates/00_templateindex", ios::binary);
-        templateindex T ;
+        templates::templateindex T ;
         int index=0;
 
         while(file.read(reinterpret_cast<char*>(&T), sizeof(T))){
-            file.read(reinterpret_cast<char*>(&T), sizeof(T));
 
             if (std::string(T.template_name_in_index) == template_name){
                 return (int)file.tellg() - 24;
@@ -175,7 +238,7 @@ namespace templates{
 
     void replace_template_index(const std::string & template_name , int number_of_subjects , int index){
 
-        templateindex data;
+        templates::templateindex data;
         strcpy(data.template_name_in_index , template_name.c_str());
         data.template_N_in_index = number_of_subjects;
 
@@ -188,18 +251,41 @@ namespace templates{
 
     void delete_template_index(int index){
 
-        templateindex delete_index{};
+        templates::templateindex delete_index{};
 
         fstream file("../templates/00_templateindex" , ios::binary | ios::in | ios::out );
+        if (index == -1){
+            return;
+        }
         file.seekp(index , ios::beg);
         file.write(reinterpret_cast<char *>(&delete_index) , sizeof(delete_index));
 
 
     }
 
+    templateindex give_template_data_at_index(int index){
+        ifstream file("../templates/00_templateindex" , ios::binary);
+        templateindex data;
+        file.seekg(index , ios::beg);
+        file.read(reinterpret_cast<char *>(&data), sizeof(data));
+        return data;
+    }
 
-}
+};
 
 int main(){
-    templates::create_template("aaa" ,2);
+    templates::create_template("fdddf" ,1);
+    // templates::add_template_index("fdd",34);
+    templates::add_template_index("HHhfdd",834);
+    templates::add_template_index("AAAfdd",345);
+    templates::add_template_index("AAAfdd",345);
+    templates::show_template_index();
+    templates::replace_template_index("OOO", 89, 48);
+    templates::show_template_index();
+    templates::delete_template_index(24);
+    templates::show_template_index();
+    cout<<templates::do_template_exist("HHhfdd");
+    templates::delete_template("fdddf");
+    templates::delete_template("fdd" );
+    
 }

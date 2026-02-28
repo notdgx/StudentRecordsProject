@@ -76,12 +76,17 @@
 - create template `Binary File`
 	- file_exist_check
 	- enter_and_return_sub
+- delete template binary file
+- return template data
+
+
+
 
 - Template Index 
 	- Modifing
-		- add_template_index
-		- do_template_exist
-		- replace_template_index
+		- add_template_index : `if already exist do nohing `
+		- do_template_exist : `if exists return the index and if not then -1`
+		- replace_template_index : 
 		- delete_template_index
 	- 
 
