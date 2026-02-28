@@ -21,6 +21,7 @@ namespace templates{
     void replace_template_index(const std::string & template_name , int number_of_subjects , int index);
     void delete_template_index(int index);
     templateindex give_template_data_at_index(int index);
+    int give_number_of_subjects(const std::string & template_name);
 
     // CREATE TEMPLATE 
 
@@ -47,13 +48,14 @@ namespace templates{
     // DELETEING TEMPLATE 
 
     void delete_template(const std::string & template_name){
-        ifstream file(template_name);
+        string path = "../templates/" + template_name + ".template";
+        ifstream file(path);
         char choice;
         if (file.is_open()){
             cout << "Are you Sure You want to delete this template ? (y/n) :";
             cin >> choice ;
             if (choice == 'y' || choice == 'Y'){
-                filesystem::remove(template_name);
+                filesystem::remove(path);
                 templates::delete_template_index(do_template_exist(template_name));
                 cout << "Template Deleted ‖ ";
             }
@@ -68,13 +70,14 @@ namespace templates{
     // adding in index will active when no of subjects pssed
     {
         char replace;
+        string path = "../templates/" + file_name + ".template";
         // char replaceT;
         string template_name;
         ofstream file1;
-        ifstream file(file_name);
+        ifstream file(path);
 
         if (!file.is_open()){
-            file1.open(file_name, ios::binary | ios::out | ios::trunc);
+            file1.open(path, ios::binary | ios::out | ios::trunc);
             if (number_of_subjects != -1){
                 add_template_index(file_name , number_of_subjects);
             }
@@ -87,7 +90,7 @@ namespace templates{
             cin >> replace ;
 
             if (replace == 'Y' || replace == 'y' ){
-                file1.open(file_name, ios::binary | ios::out | ios::trunc);
+                file1.open(path, ios::binary | ios::out | ios::trunc);
 
                 // if (number_of_subjects != -1){
                 //     cout << "Do you want to change template name ? (Y/n):";
@@ -113,7 +116,8 @@ namespace templates{
     // Return Tempalte for use
 
     Subject * return_template_data(const std::string & template_name){
-        fstream file(template_name , ios::binary | ios::in);
+        string path = "../templates/" + template_name + ".template";
+        fstream file(path , ios::binary | ios::in);
         templateindex indexdata;
         int exist = do_template_exist(template_name);
         if ( exist != -1 && file.is_open()){
@@ -134,6 +138,27 @@ namespace templates{
         }
 
 
+    }
+
+
+    /// SHOW TEMPLATE 
+    void show_template(const std::string & template_name){
+
+        Subject * data = return_template_data(template_name);
+        cout << " ------------------------------------------------------------------------------------- " << endl;
+        cout << "| Template Name : " << std::left << std::setw(65) << template_name << "   |" << endl;
+        cout << " ------------------------------------------------------------------------------------- " << endl;
+        cout << "| Name                 | Code     | Total Marks    | Obt. Marks     | Credits         |"<<endl;
+        cout << " ------------------------------------------------------------------------------------- " << endl;
+        
+        for ( int i = 0 ; i < templates::give_number_of_subjects(template_name) ; i++){
+            cout << "| " << std::left << setw(20) << data[i].getsubname() << " | " << setw(8) << data[i].getsubcode() 
+            << " | " << setw(14) << data[i].getsubtotalmarks() << " | " << setw(14) << data[i].getsubobtainedmarks() 
+            << " | " << setw(14) << data[i].getsubcredits() << "  |" << endl;
+        }
+
+            cout << " ------------------------------------------------------------------------------------- " << endl;
+            delete[] data;
     }
 
 
@@ -290,7 +315,7 @@ namespace templates{
 };
 
 // int main(){
-//     templates::create_template("fdddf" ,2);
+//     templates::create_template("BCA2ndSem" ,5);
 //     // templates::add_template_index("fdd",34);
 //     templates::add_template_index("HHhfdd",834);
 //     templates::add_template_index("AAAfdd",345);
@@ -299,16 +324,18 @@ namespace templates{
 //     templates::replace_template_index("OOO", 89, 48);
 //     templates::show_template_index();
 //     // templates::delete_template_index(24);
-//     templates::show_template_index();
-//     cout<<templates::do_template_exist("HHhfdd");
-//     Subject * str = templates::return_template_data("fdddf");  
-//     for (int i = 0 ; i< templates::give_number_of_subjects("fdddf"); i++ ) {
-//         cout<<str[i].getsubcode()<<endl;
-//         cout<<str[i].getsubcredits()<<endl;
-//         cout<<str[i].getsubname()<<endl;
-//         cout<<str[i].getsubobtainedmarks()<<endl;
-//         cout<<str[i].getsubtotalmarks()<<endl;
-//     }  // templates::delete_template("fdddf");
-//     // templates::delete_template("fdd" );
+//     // templates::show_template_index();
+//     // cout<<templates::do_template_exist("HHhfdd");
+//     // Subject * str = templates::return_template_data("fdddf");  
+//     // for (int i = 0 ; i< templates::give_number_of_subjects("fdddf"); i++ ) {
+//     //     cout<<str[i].getsubcode()<<endl;
+//     //     cout<<str[i].getsubcredits()<<endl;
+//     //     cout<<str[i].getsubname()<<endl;
+//     //     cout<<str[i].getsubobtainedmarks()<<endl;
+//     //     cout<<str[i].getsubtotalmarks()<<endl;
+//     // }  // templates::delete_template("fdddf");
+
+//     templates::show_template("BCA2ndSem");
+    // templates::delete_template("fdd" );
     
 // }

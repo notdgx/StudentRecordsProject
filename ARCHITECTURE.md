@@ -1,5 +1,5 @@
  
-## Fields 
+# Fields 
 
 - Student ID `AUTO`
 - Roll Number `AUTO`
@@ -24,14 +24,14 @@
 - Address 
 
 
-## Functions 
+# Functions 
 
-// Functions 
+## Constructos
 
 - Create Student Record `CUSTOM `
 - Create Student Record `TEMPLATE` 
 
-// Setters 
+## Setters 
 
 - set name 
 - set DOB 
@@ -46,7 +46,7 @@
 - set address 
 
 
-// Getters 
+## Getters 
 
 - get student ID 
 - get Roll no 
@@ -63,15 +63,15 @@
 - get Address 
 
 
-// Show Details 
+## Show Details 
 
 - show all details 
 - show student details 
 - show subjects details 
 
-// Template Management `namespace`
+## -> Template Management `namespace` ✓ ✕
 
-- show template index
+- `show template index` : cout the template index in table form , no return
 - show template 
 - create template `Binary File`
 	- file_exist_check
@@ -97,13 +97,13 @@
 
 
 
-// Records Management 
+## Records Management 
 
 - show records from `record.csv
 - add student data object record to `record.csv
 - fetch student record data and set to temp running object to `record.csv
 
-// Additional Functions `Calculations` : `namespace`
+## Additional Functions `Calculations` : `namespace`
 
 - get percentage 
 - get grade 
@@ -111,7 +111,7 @@
 - get Pass/Fail Status 
 - get avg marks 
 
-// Sub 
+## Sub 
 
 - get sub 
 	- sub.get name 
