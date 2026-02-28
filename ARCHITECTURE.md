@@ -78,7 +78,8 @@
 	- enter_and_return_sub
 - delete template binary file
 - return template data
-
+- give_template_data_at_index
+- give_number_of_subjects
 
 
 

@@ -20,6 +20,7 @@ namespace templates{
     void add_template_index(const std::string & template_name , int number_of_subjects);
     void replace_template_index(const std::string & template_name , int number_of_subjects , int index);
     void delete_template_index(int index);
+    templateindex give_template_data_at_index(int index);
 
     // CREATE TEMPLATE 
 
@@ -112,13 +113,24 @@ namespace templates{
     // Return Tempalte for use
 
     Subject * return_template_data(const std::string & template_name){
-        fstream file(template_name);
+        fstream file(template_name , ios::binary | ios::in);
         templateindex indexdata;
-        if (do_template_exist(template_name) != -1 && file.is_open()){
-            indexdata=give_template_data_at_index(do_template_exist(template_name));
+        int exist = do_template_exist(template_name);
+        if ( exist != -1 && file.is_open()){
+            indexdata=give_template_data_at_index(exist);
             Subject * subjects_data = new Subject[indexdata.template_N_in_index];
-            file.read(reinterpret_cast<char*>(&subjects_data), sizeof(subjects_data));
+            file.read(reinterpret_cast<char*>(subjects_data), sizeof(Subject) * indexdata.template_N_in_index);
+            file.close();
             return subjects_data;
+
+            // i was first trying to get the returned data pointer and put it in place of pointer 
+            // to the poijnter of the array 
+
+            // sizeof(subjects_data) will give the size of a pointer not the class size
+        }
+
+        else if (exist == -1 || !file.is_open()){
+            return nullptr;
         }
 
 
@@ -271,21 +283,32 @@ namespace templates{
         return data;
     }
 
+    int give_number_of_subjects(const std::string & template_name){
+        return give_template_data_at_index(do_template_exist(template_name)).template_N_in_index;
+    }
+
 };
 
-int main(){
-    templates::create_template("fdddf" ,1);
-    // templates::add_template_index("fdd",34);
-    templates::add_template_index("HHhfdd",834);
-    templates::add_template_index("AAAfdd",345);
-    templates::add_template_index("AAAfdd",345);
-    templates::show_template_index();
-    templates::replace_template_index("OOO", 89, 48);
-    templates::show_template_index();
-    templates::delete_template_index(24);
-    templates::show_template_index();
-    cout<<templates::do_template_exist("HHhfdd");
-    templates::delete_template("fdddf");
-    templates::delete_template("fdd" );
+// int main(){
+//     templates::create_template("fdddf" ,2);
+//     // templates::add_template_index("fdd",34);
+//     templates::add_template_index("HHhfdd",834);
+//     templates::add_template_index("AAAfdd",345);
+//     templates::add_template_index("AAAfdd",345);
+//     templates::show_template_index();
+//     templates::replace_template_index("OOO", 89, 48);
+//     templates::show_template_index();
+//     // templates::delete_template_index(24);
+//     templates::show_template_index();
+//     cout<<templates::do_template_exist("HHhfdd");
+//     Subject * str = templates::return_template_data("fdddf");  
+//     for (int i = 0 ; i< templates::give_number_of_subjects("fdddf"); i++ ) {
+//         cout<<str[i].getsubcode()<<endl;
+//         cout<<str[i].getsubcredits()<<endl;
+//         cout<<str[i].getsubname()<<endl;
+//         cout<<str[i].getsubobtainedmarks()<<endl;
+//         cout<<str[i].getsubtotalmarks()<<endl;
+//     }  // templates::delete_template("fdddf");
+//     // templates::delete_template("fdd" );
     
-}
+// }
