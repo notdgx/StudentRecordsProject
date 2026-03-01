@@ -26,6 +26,8 @@
 
 # Functions 
 
+
+
 ## Constructos
 
 - Create Student Record `CUSTOM `
@@ -102,7 +104,7 @@
 - add student data object record to `record.csv
 - fetch student record data and set to temp running object to `record.csv
 
-## Additional Functions `additionalfunctions` : `namespace`
+## -> Additional Functions `additionalfunctions` : `namespace`
 
 - `float get_percentage(Subject * sub , int number_of_subjects )` : enters a `Subject` objects array if no of subject = 0 rturns -1 , if sum of obtained marks = 0 , else return float percentage
 - `float get_percentage_each(Subject sub)` : takes a single `Subject` object and return percentage , total marks can never be zero as default = 100 until explicitly set if 0 then -1 , returns float percentage 
@@ -112,7 +114,7 @@
 - `int get_creditpoint(Subject * sub , int number_of_subjects) ` : if numebr of subject = 0 return -1 else creditpoints
 - `float get_averagemarks(Subject * sub , int number_of_subjects )` : returns float average marks if no of subjects is zero returns -1
 
-## Subjects `Subject` : `class`
+## -> Subjects `Subject` : `class`
 
 - get sub 
 	- sub.get name 
@@ -129,4 +131,6 @@
 	- sub.change credits 
 
 - `static bool verifyname(const string & name)`: returns true if size < 20 else false
+
+## Validations 
 

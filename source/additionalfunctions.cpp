@@ -88,7 +88,7 @@ int get_gradepoint_each(Subject sub){
     else if (percentage >= 50) return 6;
     else if (percentage >= 40) return 5;
 
-    return 0;  // below 40
+    return 0;  // below 40, 
 }
 
 
