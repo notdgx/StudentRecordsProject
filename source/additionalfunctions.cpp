@@ -2,6 +2,8 @@
 #include <string>
 #include "subjects.cpp"
 
+namespace additionalfunctions{
+
 float get_percentage(Subject * sub , int number_of_subjects ){ 
 
     float percentage;
@@ -28,6 +30,7 @@ float get_percentage(Subject * sub , int number_of_subjects ){
 
 float get_percentage_each(Subject sub){
     float percentage;
+    if (sub.getsubtotalmarks() == 0 ){ return -1;}
     percentage = (static_cast<float>(sub.getsubobtainedmarks()) / sub.getsubtotalmarks()) * 100;
     return percentage;
 
@@ -76,6 +79,8 @@ bool get_passstatus(Subject * sub , int number_of_subjects){
 int get_gradepoint_each(Subject sub){
     float percentage = get_percentage_each(sub);
 
+    if (percentage == -1 ){ return -1;}
+
     if (percentage >= 90) return 10;
     else if (percentage >= 80) return 9;
     else if (percentage >= 70) return 8;
@@ -89,20 +94,25 @@ int get_gradepoint_each(Subject sub){
 
 int get_creditpoint(Subject * sub , int number_of_subjects) {
     int creditpoint = 0;
+
+    if (number_of_subjects == 0) {return -1;}
     for (int i=0 ; i< number_of_subjects ; i++){
         creditpoint += sub[i].getsubcredits() *  get_gradepoint_each(sub[i]);
     }
     return creditpoint;
 }
 
-char get_cgpa(Subject * sub , int number_of_subjects){
+float get_cgpa(Subject * sub , int number_of_subjects){
     float cgpa;
     int totalcreditpoints = get_creditpoint(sub,number_of_subjects);
     int totalcredits = 0 ; 
+    if (totalcreditpoints == -1 ){ return -1;}
     for (int i = 0 ; i < number_of_subjects ; i++){
         totalcredits += sub[i].getsubcredits();
     }
 
     cgpa = (static_cast<float>(totalcreditpoints) / totalcredits);
     return cgpa; 
+}
+
 }
