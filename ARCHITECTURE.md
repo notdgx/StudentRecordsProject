@@ -19,9 +19,18 @@
 	- Obtained Marks 
 	- Credits
 
-- email
-- phone no 
+- contact
+	- email
+	- phone no 
+
+
 - Address 
+	- house
+	- street
+	- cuty
+	- state
+	- country
+	- pincode
 
 
 # Functions 

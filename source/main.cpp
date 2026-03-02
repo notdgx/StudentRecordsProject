@@ -4,7 +4,7 @@
 #include "courses.cpp"
 #include "additionalfunctions.cpp"
 #include "templates.cpp"
-#include "forstudents.cpp"
+#include "fields.cpp"
 
 
 
@@ -13,18 +13,10 @@ class Students
 
 private:
 
-    int student_id;
-    int student_rollno;
-    string student_name;
-    forstudents::date student_dob{0,0,0};
-    char student_gender; 
-    char student_course[20];
-    char student_section;
-    int student_number_of_subjects;
-    int student_enrollement_year;
-    int student_pending_fee=0;
-    forstudents::contact student_contacts{"N/A","N/A","N/A"};
-    Subject sub[10];
+    static int student_rollno_A;
+    static int student_id_A;
+
+    datafields::fields data;
 
     void generate_rollno()
     {
@@ -32,8 +24,8 @@ private:
     }
 
     void generate_student_id(){
-        student_id = forstudents::student_id_A;
-        forstudents::student_id_A++;
+        data.student_id = student_id_A;
+        student_id_A++;
     }
 
 public:
@@ -99,3 +91,6 @@ public:
 
 
 
+
+int student_rollno_A = 4001 ;
+int student_id_A = 200;
