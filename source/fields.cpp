@@ -39,8 +39,14 @@ struct fields{
     int student_pending_fee=0;
     contact student_contacts{"N/A","N/A"};
     address student_address{0};
-    Subject sub[10]; // max is 10 stubjects allowed
+    Subject student_subjects[10]; // max is 10 stubjects allowed
 
 };
+
+struct sub_rollno{
+    char student_course[20];
+    int student_rollno_A;
+};
+
 
 }

@@ -85,15 +85,21 @@
 - Struct `templateindex` : Name , N 
 
 - `show template index` : cout the template index in table form , no return
+
 - `void show_template(const std::string & template_name)` : prints the template data in table form and empties the heap
+
 - `int create_template(const std::string & template_name , int number_of_subjects = 10)` : create template if not created return -1
 	- `ofstream file_exists_check(const std::string & file_name, int number_of_subjects = -1)` : return file , empty file ptr
 		- if number_of_subjects passed then : 	`add_template_index()`
 		- if not then not called : `add_template_index()`
 	- `Subject enter_and_return_sub()` : return Subject object , use `verifynmae(string name)` from subjects to check the string length < 20 entererd
+
 - `delete_templatevoid delete_template(const std::string & template_name)` : deltetr templare  binary file & call `delte_template_index()` , use `<filesystem>` , if not exist then not deleted
+
 - `Subject * return_template_data(const std::string & template_name)` : returns nullptr or pointer to heap data of the template name entered
+
 - `templateindex give_template_data_at_index(int index)` : returns the struct at index from the temlape file, index must be vaild 
+
 - `int give_number_of_subjects(const std::string & template_name)` : give number of subjects in index by template name index must be vaild
 
 
@@ -107,7 +113,13 @@
 
 
 
-## Records Management 
+## Records Management `recorddata` : `namespace`
+
+- `update_session_data`
+- `add_session_data`
+- `get_session_data_length`
+- `do_course_in_session`
+- 
 
 - show records from `record.csv
 - add student data object record to `record.csv

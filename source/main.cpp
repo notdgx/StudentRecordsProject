@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include "subjects.cpp"
-#include "courses.cpp"
 #include "additionalfunctions.cpp"
 #include "templates.cpp"
 #include "fields.cpp"
@@ -17,7 +16,7 @@ private:
     static int student_rollno_A;
     static int student_id_A;
 
-    datafields::fields data;
+    datafields::fields data{};
 
     void generate_rollno()
     {
@@ -31,9 +30,15 @@ private:
 
 public:
 
+    // CONSTRUCTERSS
+
+    Students(){}
+
+    // Students(const string & student_name, )
+
     //SETTERS
 
-    int set_student_name(const string & student_name){
+    int set_student_name(const string & student_name , int day, int month, int year, const char & student_gender){
         int x = validations::validate_name(student_name,sizeof(data.student_name)); 
         if (x == 1){
             strcpy(data.student_name , student_name.c_str()); 
@@ -133,7 +138,55 @@ public:
 
     // GETTERSSSS
 
+    int get_student_id(){
+        return data.student_id;
+    }
 
+    int get_student_rollno(){
+        return data.student_rollno;
+    }
+
+    std::string get_student_name(){
+        return std::string(data.student_name);
+    }
+
+    datafields::date get_student_dob(){
+        return data.student_dob;
+    }
+
+    char get_student_gender(){
+        return data.student_gender;
+    }
+
+    std::string get_student_course(){
+        return std::string(data.student_course);
+    }
+
+    char get_student_section(){
+        return data.student_section;
+    }
+
+    int get_student_number_of_subjects(){
+        return data.student_number_of_subjects;
+    }
+
+    int get_student_pending_fee(){
+        return data.student_pending_fee;
+    }
+
+    Subject * get_student_subjects(){
+        return data.student_subjects;
+    }
+
+    datafields::contact get_student_contacts(){
+        return data.student_contacts;
+    }
+
+    datafields::address get_student_address(){
+        return data.student_address;
+    }
+
+    // ________________________________________
 
 
 
