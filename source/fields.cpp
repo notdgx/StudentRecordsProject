@@ -15,7 +15,7 @@ struct address {
     char city[40];
     char state[40];
     char country[40];
-    char pincode[10];
+    char pincode[7];
 };
 
 struct contact{
