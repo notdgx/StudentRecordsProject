@@ -126,55 +126,8 @@ namespace recorddata{
 
     /// GET RECORD DATA
 
-    /*
-    // datafields::fields get_record_data(int key , bool flag = true ){
-    //     int a;
-    //     int length = get_record_length();
-    //     datafields::fields data{};
-    //     if (flag){
-    //         key = get_student_id_by_rollno(key);
-    //     }
-    //     else{
-    //         a = do_student_id_exists_in_record(key);
-    //         if (a == -1){
-    //             return data;
-    //         }
-    //     }
-    //     if (key == -1){
-    //         return data;
-    //     }
 
-    //     ifstream file(record_file_path , ios::in | ios::binary);
-    //     if (file.is_open()){
-    //         for (int i = 0 ; i < length ; i++ ){
-    //             file.seekg(i * sizeof(datafields::fields),ios::beg);
-    //             file.read(reinterpret_cast<char *>(&))
-    //         }
-    //     }
-
-
-
-    // }
-
-    // int do_student_id_exists_in_record(int studentid){
-    //     int length = get_record_length();
-    //     ifstream file(record_file_path , ios::binary);
-    //     int student_id_C;
-    //     if (!file.is_open()){
-    //         return 0;
-    //     }
-
-    //     for (int i = 0 ; i < length ; i++ ){
-    //         file.seekg(i * sizeof(datafields::fields) , ios::beg);
-    //         file.read(reinterpret_cast<char *>(&student_id_C),sizeof(student_id_C));
-    //         if (student_id_C == studentid){
-    //             return 1;
-    //         }
-    //     }
-    //     return -1;
-    // } */
-
-    datafields::fields get_record_data(int key, bool flag = true){
+    datafields::fields get_record_data_by_key(int key, bool flag = true){
         if (flag){
             return get_record_data_by_student_id(key);
         }
@@ -211,6 +164,89 @@ namespace recorddata{
         }
         return data;
     }
+
+    // GET ALL RECORD DATA 
+
+    datafields::fields * get_all_record_data(){
+        int length = get_record_length();
+        if (length == 0){
+            return nullptr;
+        }
+        datafields::fields * data = new datafields::fields[length];
+        ifstream file(record_file_path,ios::in | ios::binary);
+        if (!file.is_open()){
+            delete[] data;
+            return nullptr;
+        }
+
+        file.read(reinterpret_cast<char *>(&data),length * sizeof(datafields::fields)); //not data because data is a ptr
+        return data;
+    }
+
+    // GET RECORD DATA BY COUERSE
+
+    datafields::fields * get_records_by_course(const std::string & course){
+        int flag1 = do_course_in_session(course);
+        int count = get_no_of_records_by_course(course);
+        if (flag1 == -1 || count == 0){
+            return nullptr;
+        }
+        // int * index_array = get_array_of_index(course);
+
+        datafields::fields* data = new datafields::fields[count];
+        datafields::fields temp;
+        int index = 0;
+
+        ifstream file(record_file_path , ios::in | ios::binary);
+        if (!file.is_open()){
+            delete[] data;
+            return nullptr;
+            }
+        
+        while (file.read(reinterpret_cast<char *>(&temp),sizeof(temp)))
+        {
+            if (std::string(temp.student_course) == course){
+                data[index] = temp;
+                index ++;
+            }
+        }
+        
+        return data;
+
+    }
+
+    /*int * get_array_of_index(const std::string & course){
+        int count = get_no_of_records_by_course(course);
+        int * array = new int[count];
+        int length = get_record_length();
+        int index = 0;
+        datafields::fields temp;
+        ifstream file(record_file_path , ios::in | ios::binary);
+        for (int i = 0 ; i < length ; i++ ){
+            file.read(reinterpret_cast<char *>(&temp),sizeof(temp));
+            if (temp.student_course == course){
+                array[index] = i;
+                index++;
+            }
+        }
+        return array;
+    }*/
+
+
+    int get_no_of_records_by_course(const std::string & course){
+        int count=0;
+        datafields::fields temp;
+        ifstream file(record_file_path , ios::in | ios::binary);
+        while (file.read(reinterpret_cast<char *>(&temp),sizeof(temp)))
+        {
+            if (std::string(temp.student_course) == course){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    
 
     // ___________________________________________________________________
 
