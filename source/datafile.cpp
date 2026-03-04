@@ -10,11 +10,9 @@ namespace recorddata{
 
     int get_session_length();
 
-    int add_data_to_record(datafields::fields & data){
-        fstream file(session_file_path , ios::in | ios::out | ios::binary);
-        if (!file.is_open()){
-            return 0;
-        }
+    // RECORD DATA FILE
+
+    int connect_data_to_record(datafields::fields & data){ // add or updare automatically
 
         // Update to session file
 
@@ -26,8 +24,6 @@ namespace recorddata{
         else{
             update_session_data(std::string(data.student_course),index);
         }
-        
-        file.close();
 
         // assign the rollno as per course and student id also 
         data.student_id = get_student_id_A();
@@ -35,18 +31,101 @@ namespace recorddata{
 
         // update to record file
 
-        ofstream recordfile(record_file_path, ios::binary | ios::app);
+        fstream recordfile(record_file_path,ios::in | ios::out | ios::binary );
         if (!recordfile.is_open()){
             return -1;
         }
 
-        recordfile.write(reinterpret_cast<char *>(&data),sizeof(data));
-        recordfile.close();
+        int recordindex = do_record_exists(data);
 
+        if (recordindex == -1 ){
+        add_record_data(data);
+        return 1;
+        }
 
+        update_record_data(data);
         return 1;
 
     }
+
+    int add_record_data(datafields::fields & data){
+        ofstream file(record_file_path , ios::binary | ios::app);
+        if (!file.is_open()){
+            return -1;
+        }
+        file.write(reinterpret_cast<char *>(&data),sizeof(data));
+        file.close();
+        return 1;
+
+    }
+
+    int update_record_data(datafields::fields & data){
+        fstream file(record_file_path,ios::in | ios::out | ios::binary);
+        int index = do_record_exists(data);
+        if (!file.is_open()){
+            return 0;
+        }
+
+        file.seekp(index * sizeof(data),ios::beg);
+        file.write(reinterpret_cast<char*>(&data),sizeof(data));
+        file.close();
+        return 1;
+    }
+
+    int delete_record_data(datafields::fields & data){
+        fstream file(record_file_path,ios::in | ios::out | ios::binary);
+        datafields::fields deleted{};
+        int index = do_record_exists(data);
+        if (!file.is_open()){
+            return 0;
+        }
+        if (index == -1){
+            return -1;
+        }
+
+        file.seekp(index * sizeof(data),ios::beg);
+        file.write(reinterpret_cast<char *>(&deleted), sizeof(deleted));
+        return 1;
+        
+
+    }
+
+
+
+    int do_record_exists(datafields::fields & data){
+        ifstream file(record_file_path,ios::in | ios::binary);
+        if (!file.is_open()){
+            return -2;
+        }
+        int length = get_record_length();
+        int student_id, i,size;
+        file.seekg(0,ios::end);
+        size = file.tellg();
+        if (size == 0 ){
+            return -1;
+        }
+        for (i = 0; i < length ; i++){
+            file.seekg(i * sizeof(data), ios::beg);
+            file.read(reinterpret_cast<char*>(&student_id),sizeof(student_id));
+            if (student_id == data.student_id){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    int get_record_length(){
+        ifstream file(record_file_path,ios::in | ios::binary);
+        int length,size;
+        file.seekg(0,ios::end);
+        size = file.tellg();
+        file.close();
+        length = size / sizeof(datafields::fields);
+        return length;
+    }
+
+
+    // ___________________________________________________________________
 
     // FOR SESSION DATA FILE
 
@@ -111,9 +190,9 @@ namespace recorddata{
         int length = get_session_length();
         file.seekg(8,ios::beg);
 
-        for (int i = 0 ; i <= length ; i++){
+        for (int i = 0 ; i < length ; i++){
             file.read(reinterpret_cast<char *>(& data),sizeof(data));
-            if (data.student_course == course){
+            if (std::string(data.student_course) == course){
                 return i;
             }
         }
@@ -135,6 +214,7 @@ namespace recorddata{
 
         file.seekg(8,ios::beg);
         datafields::sub_rollno * data = new datafields::sub_rollno[length];
+        file.read(reinterpret_cast<char *> (&data), length * sizeof(datafields::sub_rollno) );
         return data;
 
     }
@@ -185,10 +265,10 @@ namespace recorddata{
             return 0;
         }
 
-        file.seekp(4,ios::beg);
+        file.seekg(4,ios::beg);
         file.read(reinterpret_cast<char *>(&init_roll),sizeof(init_roll));
         new_init_roll=init_roll+1000;
-        file.seekg(4,ios::beg);
+        file.seekp(4,ios::beg);
         file.write(reinterpret_cast<char *>(&new_init_roll),sizeof(new_init_roll));
         file.close();
         return init_roll;
