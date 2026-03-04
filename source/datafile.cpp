@@ -12,7 +12,7 @@ namespace recorddata{
 
     // RECORD DATA FILE
 
-    int connect_data_to_record(datafields::fields & data){ // add or updare automatically
+    int connect_to_record_data(datafields::fields & data){ // add or updare automatically
 
         // Update to session file
 
@@ -124,6 +124,93 @@ namespace recorddata{
         return length;
     }
 
+    /// GET RECORD DATA
+
+    /*
+    // datafields::fields get_record_data(int key , bool flag = true ){
+    //     int a;
+    //     int length = get_record_length();
+    //     datafields::fields data{};
+    //     if (flag){
+    //         key = get_student_id_by_rollno(key);
+    //     }
+    //     else{
+    //         a = do_student_id_exists_in_record(key);
+    //         if (a == -1){
+    //             return data;
+    //         }
+    //     }
+    //     if (key == -1){
+    //         return data;
+    //     }
+
+    //     ifstream file(record_file_path , ios::in | ios::binary);
+    //     if (file.is_open()){
+    //         for (int i = 0 ; i < length ; i++ ){
+    //             file.seekg(i * sizeof(datafields::fields),ios::beg);
+    //             file.read(reinterpret_cast<char *>(&))
+    //         }
+    //     }
+
+
+
+    // }
+
+    // int do_student_id_exists_in_record(int studentid){
+    //     int length = get_record_length();
+    //     ifstream file(record_file_path , ios::binary);
+    //     int student_id_C;
+    //     if (!file.is_open()){
+    //         return 0;
+    //     }
+
+    //     for (int i = 0 ; i < length ; i++ ){
+    //         file.seekg(i * sizeof(datafields::fields) , ios::beg);
+    //         file.read(reinterpret_cast<char *>(&student_id_C),sizeof(student_id_C));
+    //         if (student_id_C == studentid){
+    //             return 1;
+    //         }
+    //     }
+    //     return -1;
+    // } */
+
+    datafields::fields get_record_data(int key, bool flag = true){
+        if (flag){
+            return get_record_data_by_student_id(key);
+        }
+        else {
+            return get_record_data_by_student_rollno(key);
+        }
+    }
+    
+    datafields::fields get_record_data_by_student_rollno(int rollno){
+        datafields::fields data{};
+        ifstream file(record_file_path , ios::binary);
+        if (!file.is_open()){
+            return data;
+        }
+        while (file.read(reinterpret_cast<char*>(&data), sizeof(data))){
+            if (data.student_rollno == rollno){
+                return data;
+            }
+        }
+        return data;
+    }
+
+    datafields::fields get_record_data_by_student_id(int student_id){
+        ifstream file(record_file_path ,ios::in | ios::binary);
+        datafields::fields data{};
+        if (!file.is_open()){
+            return data;
+        }
+        while (file.read(reinterpret_cast<char*>(&data),sizeof(data)))
+        {
+            if (data.student_id == student_id){
+                return data;
+            }
+        }
+        return data;
+    }
 
     // ___________________________________________________________________
 
@@ -150,11 +237,11 @@ namespace recorddata{
     }
 
     int update_session_data(const std::string & course, int index){
+        int rollno = get_course_rollno_in_session(course);
         fstream file(session_file_path , ios::in | ios::out | ios::binary);
         if (!file.is_open()){
             return 0;
         }
-        int rollno = get_course_rollno_in_session(course);
         // if (index == -1 || rollno == -1 ){
         //     return -1;
         // }
