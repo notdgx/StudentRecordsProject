@@ -63,7 +63,7 @@ public:
 
     }
 
-    void setsubname(string& name)
+    void setsubname(const string& name)
     {   
         if (verifyname(name)){
         memset(sub_name, 0, sizeof(sub_name));
