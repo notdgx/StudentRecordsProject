@@ -198,5 +198,5 @@ public:
 
 
 
-int student_rollno_A = 4001 ;
-int student_id_A = 200;
+int student_rollno_A = 1 ;
+int student_id_A = 1000;

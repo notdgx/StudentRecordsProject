@@ -50,14 +50,3 @@ struct sub_rollno{
 
 
 }
-#include <cstddef>
-
-int main(){
-cout << offsetof(datafields::fields, student_gender)              << endl;
-cout << offsetof(datafields::fields, student_course)              << endl;
-cout << offsetof(datafields::fields, student_section)             << endl;
-cout << offsetof(datafields::fields, student_number_of_subjects)  << endl;
-cout << offsetof(datafields::fields, student_contacts)            << endl;
-cout << offsetof(datafields::fields, student_address)             << endl;
-cout << offsetof(datafields::fields, student_subjects)            << endl;
-}
