@@ -45,7 +45,7 @@ namespace recorddata{
 
     namespace show{
         int all_records(int flag);
-        int records_by_course(const std::string & course,bool flag);
+        int records_by_course(const std::string & course,int flag);
         int session_data();
     }
 
@@ -615,14 +615,217 @@ namespace show{
         }
 
         if (flag == 0){
-            std::cout<<"┌" << std::setw(56)<<"┐";
-            std::cout<<" │" << std::setw(56)<<" │";
-            std::cout<<"┼" << std::setw(56)<<"┼";
-            for (int i = 0 ; i <length ; i++){
+            std::cout << "┌──────┬──────────┬────────────────────────┬──────────────┬────┬──────────┬─────┬───────┬──────┬────────────┬──────────────────────────┬─────────────┬──────────────────┐\n";
+            std::cout << "│ "
+            << std::left << std::setw(4)  << "ID"      << " │ "
+            << std::left << std::setw(8)  << "Roll"    << " │ "
+            << std::left << std::setw(22) << "Name"    << " │ "
+            << std::left << std::setw(12) << "DOB"     << " │ "
+            << std::left << std::setw(2)  << "G"       << " │ "
+            << std::left << std::setw(8)  << "Course"  << " │ "
+            << std::left << std::setw(3)  << "Sec"     << " │ "
+            << std::left << std::setw(5)  << "Subj"    << " │ "
+            << std::left << std::setw(4)  << "Year"    << " │ "
+            << std::left << std::setw(10) << "Fee"     << " │ "
+            << std::left << std::setw(24) << "Email"   << " │ "
+            << std::left << std::setw(11) << "Phone"   << " │ "
+            << std::left << std::setw(16) << "City"
+            << " │\n";
+            std::cout << "├──────┼──────────┼────────────────────────┼──────────────┼────┼──────────┼─────┼───────┼──────┼────────────┼──────────────────────────┼─────────────┼──────────────────┤\n";
 
-            }
+    
+        for (int i = 0; i < length; i++){
+            if (data[i].student_id == 0){continue;}
+            std::string dob = std::to_string(data[i].student_dob.day)   + "-"
+            + std::to_string(data[i].student_dob.month) + "-"
+            + std::to_string(data[i].student_dob.year);
+            std::cout << "│ "
+            << std::left << std::setw(4)  << data[i].student_id                      << " │ "
+            << std::left << std::setw(8)  << data[i].student_rollno                  << " │ "
+            << std::left << std::setw(22) << data[i].student_name                    << " │ "
+            << std::left << std::setw(12) << dob                                     << " │ "
+            << std::left << std::setw(2)  << data[i].student_gender                  << " │ "
+            << std::left << std::setw(8)  << data[i].student_course                  << " │ "
+            << std::left << std::setw(3)  << data[i].student_section                 << " │ "
+            << std::left << std::setw(5)  << data[i].student_number_of_subjects      << " │ "
+            << std::left << std::setw(4)  << data[i].student_enrollement_year        << " │ "
+            << std::left << std::setw(10) << data[i].student_pending_fee             << " │ "
+            << std::left << std::setw(24) << data[i].student_contacts.email          << " │ "
+            << std::left << std::setw(11) << data[i].student_contacts.phone_no       << " │ "
+            << std::left << std::setw(16) << data[i].student_address.city
+            << " │\n";
         }
+        std::cout << "└──────┴──────────┴────────────────────────┴──────────────┴────┴──────────┴─────┴───────┴──────┴────────────┴──────────────────────────┴─────────────┴──────────────────┘\n";
+        
     }
+    
+    
+    else if (flag == 1){
+        
+        std::cout << "┌──────┬──────────┬────────────────────────┬──────────┬────────────┬──────────────┬─────────┐\n";
+        std::cout << "│ "
+        << std::left << std::setw(4)  << "ID"       << " │ "
+        << std::left << std::setw(8)  << "Roll"     << " │ "
+        << std::left << std::setw(22) << "Subject"  << " │ "
+        << std::left << std::setw(8)  << "Code"     << " │ "
+        << std::left << std::setw(10) << "Total"    << " │ "
+        << std::left << std::setw(12) << "Obtained" << " │ "
+        << std::left << std::setw(7)  << "Credits"
+        << " │\n";
+        std::cout << "├──────┼──────────┼────────────────────────┼──────────┼────────────┼──────────────┼─────────┤\n";
+        
+        for (int i = 0; i < length; i++){
+            if (data[i].student_id == 0){continue;}
+            for (int j = 0; j < data[i].student_number_of_subjects; j++){
+                
+                std::cout << "│ "
+                << std::left << std::setw(4)  << data[i].student_id                              << " │ "
+                << std::left << std::setw(8)  << data[i].student_rollno                          << " │ "
+                << std::left << std::setw(22) << data[i].student_subjects[j].getsubname()        << " │ "
+                    << std::left << std::setw(8)  << data[i].student_subjects[j].getsubcode()        << " │ "
+                    << std::left << std::setw(10) << data[i].student_subjects[j].getsubtotalmarks()  << " │ "
+                    << std::left << std::setw(12) << data[i].student_subjects[j].getsubobtainedmarks() << " │ "
+                    << std::left << std::setw(7)  << data[i].student_subjects[j].getsubcredits()
+                    << " │\n";
+                }
+                if (i < length - 1)
+                std::cout << "├──────┼──────────┼────────────────────────┼──────────┼────────────┼──────────────┼─────────┤\n";
+            }
+            std::cout << "└──────┴──────────┴────────────────────────┴──────────┴────────────┴──────────────┴─────────┘\n";
+        }
+        return 1;
+    }
+    
+    
+    
+    int records_by_course(const std::string & course,int flag = 0){
+        datafields::fields * data = recorddata::fetch::records_by_course(course);
+        int length = recorddata::fetch::no_of_records_by_course(course); 
+    
+        if (data == nullptr){
+            return 0;
+        }
+    
+        if (flag == 0){
+            std::cout << "┌──────┬──────────┬────────────────────────┬──────────────┬────┬──────────┬─────┬───────┬──────┬────────────┬──────────────────────────┬─────────────┬──────────────────┐\n";
+            std::cout << "│ "
+            << std::left << std::setw(4)  << "ID"      << " │ "
+            << std::left << std::setw(8)  << "Roll"    << " │ "
+            << std::left << std::setw(22) << "Name"    << " │ "
+            << std::left << std::setw(12) << "DOB"     << " │ "
+            << std::left << std::setw(2)  << "G"       << " │ "
+            << std::left << std::setw(8)  << "Course"  << " │ "
+            << std::left << std::setw(3)  << "Sec"     << " │ "
+            << std::left << std::setw(5)  << "Subj"    << " │ "
+            << std::left << std::setw(4)  << "Year"    << " │ "
+            << std::left << std::setw(10) << "Fee"     << " │ "
+            << std::left << std::setw(24) << "Email"   << " │ "
+            << std::left << std::setw(11) << "Phone"   << " │ "
+            << std::left << std::setw(16) << "City"
+            << " │\n";
+            std::cout << "├──────┼──────────┼────────────────────────┼──────────────┼────┼──────────┼─────┼───────┼──────┼────────────┼──────────────────────────┼─────────────┼──────────────────┤\n";
+    
+    
+        for (int i = 0; i < length; i++){
+            if (data[i].student_id == 0){continue;}
+            std::string dob = std::to_string(data[i].student_dob.day)   + "-"
+            + std::to_string(data[i].student_dob.month) + "-"
+            + std::to_string(data[i].student_dob.year);
+            std::cout << "│ "
+            << std::left << std::setw(4)  << data[i].student_id                      << " │ "
+            << std::left << std::setw(8)  << data[i].student_rollno                  << " │ "
+            << std::left << std::setw(22) << data[i].student_name                    << " │ "
+            << std::left << std::setw(12) << dob                                     << " │ "
+            << std::left << std::setw(2)  << data[i].student_gender                  << " │ "
+            << std::left << std::setw(8)  << data[i].student_course                  << " │ "
+            << std::left << std::setw(3)  << data[i].student_section                 << " │ "
+            << std::left << std::setw(5)  << data[i].student_number_of_subjects      << " │ "
+            << std::left << std::setw(4)  << data[i].student_enrollement_year        << " │ "
+            << std::left << std::setw(10) << data[i].student_pending_fee             << " │ "
+            << std::left << std::setw(24) << data[i].student_contacts.email          << " │ "
+            << std::left << std::setw(11) << data[i].student_contacts.phone_no       << " │ "
+            << std::left << std::setw(16) << data[i].student_address.city
+            << " │\n";
+        }
+        std::cout << "└──────┴──────────┴────────────────────────┴──────────────┴────┴──────────┴─────┴───────┴──────┴────────────┴──────────────────────────┴─────────────┴──────────────────┘\n";
+        
+    }
+    
+    
+    else if (flag == 1){
+        
+        std::cout << "┌──────────┬──────────┐\n";
+        std::cout << "│ "<< std::left << std::setw(8) << "Course" <<" │ " << std::setw(8) << course <<" │\n";
+        std::cout << "└──────────┴──────────┘\n";
+        
+        std::cout << "┌──────┬──────────┬────────────────────────┬──────────┬────────────┬──────────────┬─────────┐\n";
+        std::cout << "│ "
+        << std::left << std::setw(4)  << "ID"       << " │ "
+        << std::left << std::setw(8)  << "Roll"     << " │ "
+        << std::left << std::setw(22) << "Subject"  << " │ "
+        << std::left << std::setw(8)  << "Code"     << " │ "
+        << std::left << std::setw(10) << "Total"    << " │ "
+        << std::left << std::setw(12) << "Obtained" << " │ "
+        << std::left << std::setw(7)  << "Credits"
+        << " │\n";
+        std::cout << "├──────┼──────────┼────────────────────────┼──────────┼────────────┼──────────────┼─────────┤\n";
+        
+        for (int i = 0; i < length; i++){
+            if (data[i].student_id == 0){continue;}
+            for (int j = 0; j < data[i].student_number_of_subjects; j++){
+                
+                std::cout << "│ "
+                << std::left << std::setw(4)  << data[i].student_id                              << " │ "
+                << std::left << std::setw(8)  << data[i].student_rollno                          << " │ "
+                << std::left << std::setw(22) << data[i].student_subjects[j].getsubname()        << " │ "
+                    << std::left << std::setw(8)  << data[i].student_subjects[j].getsubcode()        << " │ "
+                    << std::left << std::setw(10) << data[i].student_subjects[j].getsubtotalmarks()  << " │ "
+                    << std::left << std::setw(12) << data[i].student_subjects[j].getsubobtainedmarks() << " │ "
+                    << std::left << std::setw(7)  << data[i].student_subjects[j].getsubcredits()
+                    << " │\n";
+                }
+                if (i < length - 1)
+                std::cout << "├──────┼──────────┼────────────────────────┼──────────┼────────────┼──────────────┼─────────┤\n";
+            }
+            std::cout << "└──────┴──────────┴────────────────────────┴──────────┴────────────┴──────────────┴─────────┘\n";
+        }
+        return 1;
+    }
+
+
+
+    int session_data(){
+        int length = session::get_length();
+        ifstream file(session_file_path,ios::in | ios::binary);
+        datafields::sub_rollno data;
+        int value , value2;
+        if (!file.is_open()){
+            return 0;
+        }
+        
+        file.read(reinterpret_cast<char *>(&value),sizeof(value)) ;
+        file.read(reinterpret_cast<char *>(&value2),sizeof(value2));
+        std::cout << "┌──────────────────────┬──────────┐\n";
+        std::cout << "│ "<< std::left << std::setw(20)  << "Student ID"<< " │ " << std::setw(8)  << "Assigner" <<" │\n";
+        std::cout << "├──────────────────────┼──────────┤\n";
+        std::cout << "│ "<< std::left << std::setw(20)  << value << " │ " << std::setw(8)  << value2 <<" │\n";
+        std::cout <<"└──────────────────────┴──────────┘\n";
+        
+        if (length == 0) { return -1;}
+        
+        std::cout << "┌──────────────────────┬──────────┐\n";
+        std::cout << "│ "<< std::left << std::setw(20)  << "Course "<< " │ " << std::setw(8)  << "Roll No" <<" │\n";
+        std::cout << "├──────────────────────┼──────────┤\n";
+        while(file.read(reinterpret_cast<char *>(&data),sizeof(data))){
+            std::cout << "│ "<< std::left << std::setw(20)  << data.student_course << " │ " << std::setw(8)  << data.student_rollno_A <<" │\n";
+        }
+        std::cout << "└──────────────────────┴──────────┘\n";
+
+
+
+    }
+
+
 }
 
 }
@@ -855,7 +1058,7 @@ cout << "Get course roll no bsc: " << recorddata::session::get_course_rollno("BS
 cout << "Get course roll no mca: " << recorddata::session::get_course_rollno("MCA")<<endl;
 cout << "Session length no of corses :" << recorddata::session::get_length()<<endl;
 cout << "get std id A :" << recorddata::session::get_student_id_A()<<endl;
-cout << "get init roll no :" << recorddata::session::init_rollno_for_new_course()<<endl;
+// cout << "get init roll no :" << recorddata::session::init_rollno_for_new_course()<<endl;
 
 int a = recorddata::session::get_length();
 datafields::sub_rollno * sessiondata = recorddata::session::get_data();
@@ -898,5 +1101,13 @@ cout<< recorddata::fetch::export_csv_by_course("BCA");
 cout<< recorddata::fetch::export_csv_by_course("BSC");
 cout<< recorddata::fetch::export_csv_by_course("MCA");
 cout<< recorddata::fetch::export_csv_all();
-
+recorddata::show::all_records(0);
+recorddata::show::all_records(1);
+recorddata::show::session_data();
+recorddata::show::records_by_course("BCA");
+recorddata::show::records_by_course("BSC");
+recorddata::show::records_by_course("MCA");
+recorddata::show::records_by_course("BCA",1);
+recorddata::show::records_by_course("BSC",1);
+recorddata::show::records_by_course("MCA",1);
 }
