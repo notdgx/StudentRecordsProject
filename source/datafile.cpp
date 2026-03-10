@@ -3,11 +3,14 @@
 // #include "main.cpp"
 #include "fields.cpp"
 #include <fstream>
+#include <iomanip>
+
 
 namespace recorddata{
 
     std::string session_file_path = "../files/session_data";
     std::string record_file_path = "../files/record";
+    int newrollnorange = 1000;
 
     namespace session{
         int add_data(const std::string & course , int index);
@@ -26,6 +29,7 @@ namespace recorddata{
         int delete_data(datafields::fields & data);
         int do_exists(datafields::fields & data);
         int get_length();
+        int check_duplicate(datafields::fields & data);
     }
 
     namespace fetch{
@@ -35,6 +39,14 @@ namespace recorddata{
         datafields::fields * all_record();
         datafields::fields * records_by_course(const std::string & course);
         int no_of_records_by_course(const std::string & course);
+        int export_csv_by_course(const std::string & course);
+        int export_csv_all();
+    }
+
+    namespace show{
+        int all_records(int flag);
+        int records_by_course(const std::string & course,bool flag);
+        int session_data();
     }
 
     // RECORD DATA FILE
@@ -167,6 +179,36 @@ namespace recorddata{
         return 0;
     }
 
+    int check_duplicate(datafields::fields & data){
+        int count = 0 , size;
+        ifstream file(record_file_path,ios::in | ios::binary);
+        if (!file.is_open()){
+            return -2;
+        }
+        file.seekg(0,ios::end);
+        size = file.tellg();
+        if (size == 0 ){
+            return -1;
+        }
+
+        datafields::fields temp;
+        while (file.read(reinterpret_cast<char *>(&temp),sizeof(temp))){
+
+            if (temp.student_id == 0){continue;}
+
+            count = 0;
+            
+            if (std::string(temp.student_name) == std::string(data.student_name)) {count++;}
+            if (std::string(temp.student_contacts.email) == std::string(data.student_contacts.email)) {count++;}
+            if (std::string(temp.student_contacts.phone_no) == std::string(data.student_contacts.phone_no)) {count++;}
+            if ((temp.student_dob.day == data.student_dob.day) && (temp.student_dob.month == data.student_dob.month) && (temp.student_dob.year == data.student_dob.year)) {count++;}
+            
+            if (count>=4){
+                return 1;
+            }
+        }
+        return -1;
+    }
 }
 
     /// GET RECORD DATA
@@ -295,6 +337,105 @@ namespace recorddata{
         return count;
     }
 
+
+    int export_csv_by_course(const std::string & course){
+        std::string studentpath =  "../export/" + course + "_students.csv";
+        std::string subjectpath =  "../export/" + course + "_subjects.csv";
+        std::string studentscolumn ,subjectscolumn ;
+        datafields::fields * data = records_by_course(course);
+        if (data == nullptr){
+            return -1;
+        } 
+        
+        int count = no_of_records_by_course(course);
+        
+        fstream studentexportfile(studentpath , ios::out );
+        fstream subjectexportfile(subjectpath , ios::out );
+        if (!studentexportfile.is_open()|| !subjectexportfile.is_open()){
+            return 0;
+        }
+
+        studentscolumn = "Student ID,Rollno,Name,DOB,Gender,Course,Section,No of Sub,Enrollement Year,Pending Fee,Email,Phone No,Address\n";
+        studentexportfile << studentscolumn;
+
+        subjectscolumn = "Student ID,Name,Code,Total Marks,Obtained Marks,Credits\n";
+        subjectexportfile << subjectscolumn;
+
+        for (int i = 0 ; i < count ; i++){
+
+            if (data[i].student_id == 0) { continue; }
+            studentscolumn = std::to_string(data[i].student_id) + ',' + std::to_string(data[i].student_rollno)  
+                    + ',' + data[i].student_name + ',' + std::to_string(data[i].student_dob.day) + '-' + std::to_string(data[i].student_dob.month) + '-' + std::to_string(data[i].student_dob.year) 
+                    + ',' + data[i].student_gender + ',' + data[i].student_course + ',' + data[i].student_section + ',' + std::to_string(data[i].student_number_of_subjects) + ',' + std::to_string(data[i].student_enrollement_year) 
+                    + ',' + std::to_string(data[i].student_pending_fee) + ',' + data[i].student_contacts.email + ',' + data[i].student_contacts.phone_no
+                    + ',' + '\"' + data[i].student_address.house + ',' + data[i].student_address.street + ',' +  data[i].student_address.city + ',' +  data[i].student_address.state + ',' 
+                    +  data[i].student_address.country + ',' +  data[i].student_address.pincode  + "\"\n";
+
+            studentexportfile << studentscolumn ;
+
+            for (int j = 0 ; j < data[i].student_number_of_subjects ; j++){
+                subjectscolumn = std::to_string(data[i].student_id) + ',' + std::to_string(data[i].student_rollno) + ',' + data[i].student_subjects[j].getsubname() + ',' + std::to_string(data[i].student_subjects[j].getsubcode()) + ',' 
+                + std::to_string(data[i].student_subjects[j].getsubtotalmarks()) + ',' + std::to_string(data[i].student_subjects[j].getsubobtainedmarks()) + ',' 
+                + std::to_string(data[i].student_subjects[j].getsubcredits()) + "\n" ;  
+
+                subjectexportfile << subjectscolumn; 
+            }
+            // subjectexportfile << '\n'; 
+
+        }
+        studentexportfile.close();
+        subjectexportfile.close();
+        return 1;
+    }
+
+
+    int export_csv_all(){
+        std::string studentscolumn ,subjectscolumn ;
+        datafields::fields * data = all_record();
+        if (data == nullptr){
+            return -1;
+        } 
+        
+        int count = record::get_length();
+        
+        fstream studentexportfile("../export/all_students.csv", ios::out );
+        fstream subjectexportfile("../export/all_subjects.csv", ios::out );
+        if (!studentexportfile.is_open()|| !subjectexportfile.is_open()){
+            return 0;
+        }
+
+        studentscolumn = "Student ID,Rollno,Name,DOB,Gender,Course,Section,No of Sub,Enrollement Year,Pending Fee,Email,Phone No,Address\n";
+        studentexportfile << studentscolumn;
+
+        subjectscolumn = "Student ID,Name,Code,Total Marks,Obtained Marks,Credits\n";
+        subjectexportfile << subjectscolumn;
+
+        for (int i = 0 ; i < count ; i++){
+
+            if (data[i].student_id == 0) { continue; }
+            studentscolumn = std::to_string(data[i].student_id) + ',' + std::to_string(data[i].student_rollno)  
+                    + ',' + data[i].student_name + ',' + std::to_string(data[i].student_dob.day) + '-' + std::to_string(data[i].student_dob.month) + '-' + std::to_string(data[i].student_dob.year) 
+                    + ',' + data[i].student_gender + ',' + data[i].student_course + ',' + data[i].student_section + ',' + std::to_string(data[i].student_number_of_subjects) + ',' + std::to_string(data[i].student_enrollement_year) 
+                    + ',' + std::to_string(data[i].student_pending_fee) + ',' + data[i].student_contacts.email + ',' + data[i].student_contacts.phone_no
+                    + ',' + '\"' + data[i].student_address.house + ',' + data[i].student_address.street + ',' +  data[i].student_address.city + ',' +  data[i].student_address.state + ',' 
+                    +  data[i].student_address.country + ',' +  data[i].student_address.pincode  + "\"\n";
+
+            studentexportfile << studentscolumn ;
+
+            for (int j = 0 ; j < data[i].student_number_of_subjects ; j++){
+                subjectscolumn = std::to_string(data[i].student_id) + ',' + std::to_string(data[i].student_rollno) + ',' + data[i].student_subjects[j].getsubname() + ',' + std::to_string(data[i].student_subjects[j].getsubcode()) + ',' 
+                + std::to_string(data[i].student_subjects[j].getsubtotalmarks()) + ',' + std::to_string(data[i].student_subjects[j].getsubobtainedmarks()) + ',' 
+                + std::to_string(data[i].student_subjects[j].getsubcredits()) + "\n" ;  
+
+                subjectexportfile << subjectscolumn; 
+            }
+            // subjectexportfile << '\n'; 
+
+        }
+        studentexportfile.close();
+        subjectexportfile.close();
+        return 1;
+    }
 }
 
 
@@ -398,9 +539,12 @@ namespace recorddata{
 
     int get_length(){
 
-        ifstream file(session_file_path , ios::in | ios::binary);
+        ifstream file(session_file_path , ios::in | ios::binary | ios::ate);
         int size,length;
-        file.seekg(0,ios::end);
+        // file.seekg(0,ios::end);
+        if(!file.is_open()){
+            return 0;
+        }
         size = file.tellg();
         file.close();
         
@@ -442,7 +586,7 @@ namespace recorddata{
 
         file.seekg(4,ios::beg);
         file.read(reinterpret_cast<char *>(&init_roll),sizeof(init_roll));
-        new_init_roll=init_roll+1000;
+        new_init_roll=init_roll+recorddata::newrollnorange;
         file.seekp(4,ios::beg);
         file.write(reinterpret_cast<char *>(&new_init_roll),sizeof(new_init_roll));
         file.close();
@@ -459,6 +603,26 @@ namespace recorddata{
         file.close();
 }
 
+}
+
+namespace show{
+    int all_records(int flag = 0){
+        datafields::fields * data = recorddata::fetch::all_record();
+        int length = recorddata::record::get_length(); 
+
+        if (data == nullptr){
+            return 0;
+        }
+
+        if (flag == 0){
+            std::cout<<"┌" << std::setw(56)<<"┐";
+            std::cout<<" │" << std::setw(56)<<" │";
+            std::cout<<"┼" << std::setw(56)<<"┼";
+            for (int i = 0 ; i <length ; i++){
+
+            }
+        }
+    }
 }
 
 }
@@ -730,689 +894,9 @@ for (int j = 0 ; j < b ; j++ ){
     cout << "______________"<< endl;
 }
 
-// OUTPUTSSSSSSSS
-
-// dx source ▸ g++ datafile.cpp -o f ; ./f 
-// Do course exists : (it gives where it exist index ) : 2
-// Get course roll no bca: 1051
-// ID bca: 142
-// ID bca: 143
-// ID mcs: 144
-// ID bsc: 145
-// ID bsc: 146
-// Get course roll no bsc: 3051
-// Get course roll no mca: 2025
-// Session length no of corses :3
-// get std id A :147
-// get init roll no :18000
-// course : BCA
-// Roll no : 1051
-// course : MCA
-// Roll no : 2025
-// course : BSC
-// Roll no : 3051
-// Length : 130
-// DO Exists: 128
-// DO Exists: 128
-// BSC NO OF RECORDs : 32
-// BCA NO OF RECORDs : 52
-// MCA NO OF RECORDs : 26
-// _________
-// NAME : Karan Singh
-// NO OF SUB : 5
-// COURSE: BSC
-// EMAIL : karan@mail.com
-// DOB : 5 1 2001
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE ::
-// NO OF SUB :: 0
-// NAME :<<
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Sneha Patel
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Sneha Patel
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Sneha Patel
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Sneha Patel
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Sneha Patel
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Arjun Sharma
-// ______________
-// ______________
-// COURSE :: BCA
-// NO OF SUB :: 5
-// NAME :<<Priya Verma
-// ______________
-// ______________
-// COURSE :: MCA
-// NO OF SUB :: 5
-// NAME :<<Rohit Mehta
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Sneha Patel
-// ______________
-// ______________
-// COURSE :: BSC
-// NO OF SUB :: 5
-// NAME :<<Karan Singh
-// ______________
-
+cout<< recorddata::fetch::export_csv_by_course("BCA");
+cout<< recorddata::fetch::export_csv_by_course("BSC");
+cout<< recorddata::fetch::export_csv_by_course("MCA");
+cout<< recorddata::fetch::export_csv_all();
 
 }
