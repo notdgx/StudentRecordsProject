@@ -5,12 +5,14 @@
 #include <fstream>
 #include <iomanip>
 
+int student_id_A = 1;   
+int rollno_assigner_initial = 1000;
 
 namespace recorddata{
 
     std::string session_file_path = "../files/session_data";
     std::string record_file_path = "../files/record";
-    int newrollnorange = 1000;
+    int rollno_assigner = 1000;
 
     namespace session{
         int add_data(const std::string & course , int index);
@@ -21,8 +23,9 @@ namespace recorddata{
         int get_length();
         int get_student_id_A();
         int init_rollno_for_new_course();
+        void init_session();
     }
-
+    
     namespace record{
         int add_data(datafields::fields & data);
         int update_data(datafields::fields & data);
@@ -30,6 +33,7 @@ namespace recorddata{
         int do_exists(datafields::fields & data);
         int get_length();
         int check_duplicate(datafields::fields & data);
+        int init_record();
     }
 
     namespace fetch{
@@ -47,6 +51,29 @@ namespace recorddata{
         int all_records(int flag);
         int records_by_course(const std::string & course,int flag);
         int session_data();
+    }
+
+    // INITAILIZER IF FILE DOESNT EXISTs
+    
+    int init_files(){
+        ifstream record_file(record_file_path,ios::in | ios::binary);
+        ifstream session_file(session_file_path,ios::in | ios::binary);
+        int a;
+
+        if (!session_file.is_open()){
+            session::init_session();
+            a = record::init_record();
+            if (a == 1)
+            return 1;
+            
+            else 
+            return -1;
+        }
+
+        if (!record_file.is_open()){
+            record::init_record();
+        }
+        return 2;
     }
 
     // RECORD DATA FILE
@@ -172,7 +199,7 @@ namespace recorddata{
 
 
     int init_record(){
-        fstream file(recorddata::record_file_path,ios::out|ios::binary);
+        ofstream file(recorddata::record_file_path,ios::out|ios::binary);
         if (!file.is_open()){
             return 1;
         }
@@ -358,7 +385,7 @@ namespace recorddata{
         studentscolumn = "Student ID,Rollno,Name,DOB,Gender,Course,Section,No of Sub,Enrollement Year,Pending Fee,Email,Phone No,Address\n";
         studentexportfile << studentscolumn;
 
-        subjectscolumn = "Student ID,Name,Code,Total Marks,Obtained Marks,Credits\n";
+        subjectscolumn = "Student ID,Roll No,Name,Code,Total Marks,Obtained Marks,Credits\n";
         subjectexportfile << subjectscolumn;
 
         for (int i = 0 ; i < count ; i++){
@@ -407,7 +434,7 @@ namespace recorddata{
         studentscolumn = "Student ID,Rollno,Name,DOB,Gender,Course,Section,No of Sub,Enrollement Year,Pending Fee,Email,Phone No,Address\n";
         studentexportfile << studentscolumn;
 
-        subjectscolumn = "Student ID,Name,Code,Total Marks,Obtained Marks,Credits\n";
+        subjectscolumn = "Student ID,Roll No,Name,Code,Total Marks,Obtained Marks,Credits\n";
         subjectexportfile << subjectscolumn;
 
         for (int i = 0 ; i < count ; i++){
@@ -586,7 +613,7 @@ namespace recorddata{
 
         file.seekg(4,ios::beg);
         file.read(reinterpret_cast<char *>(&init_roll),sizeof(init_roll));
-        new_init_roll=init_roll+recorddata::newrollnorange;
+        new_init_roll=init_roll+recorddata::rollno_assigner;
         file.seekp(4,ios::beg);
         file.write(reinterpret_cast<char *>(&new_init_roll),sizeof(new_init_roll));
         file.close();
@@ -594,12 +621,10 @@ namespace recorddata{
 
     }
 
-    void inti_session(){
+    void init_session(){
         ofstream file(recorddata::session_file_path, ios::out | ios::binary);
-        int student_id_A = 1;   
-        int rollno_init = 1000;
         file.write(reinterpret_cast<char*>(&student_id_A), sizeof(int));
-        file.write(reinterpret_cast<char*>(&rollno_init), sizeof(int));
+        file.write(reinterpret_cast<char*>(&rollno_assigner_initial), sizeof(int));
         file.close();
 }
 
@@ -821,6 +846,7 @@ namespace show{
         }
         std::cout << "└──────────────────────┴──────────┘\n";
 
+        return 1;
 
 
     }
@@ -1100,7 +1126,7 @@ for (int j = 0 ; j < b ; j++ ){
 cout<< recorddata::fetch::export_csv_by_course("BCA");
 cout<< recorddata::fetch::export_csv_by_course("BSC");
 cout<< recorddata::fetch::export_csv_by_course("MCA");
-cout<< recorddata::fetch::export_csv_all();
+cout<< recorddata::fetch::export_csv_all()<<endl;
 recorddata::show::all_records(0);
 recorddata::show::all_records(1);
 recorddata::show::session_data();
