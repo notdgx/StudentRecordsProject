@@ -15,7 +15,7 @@ namespace recorddata{
     int rollno_assigner = 1000;
 
     namespace session{
-        int add_data(const std::string & course , int index);
+        int add_data(const std::string & course);
         int update_data(const std::string & course, int index);
         int get_course_rollno(const std::string & course);
         int do_course_exists(const std::string & course);
@@ -65,13 +65,18 @@ namespace recorddata{
             a = record::init_record();
             if (a == 1)
             return 1;
-            
+
             else 
             return -1;
         }
 
         if (!record_file.is_open()){
-            record::init_record();
+            a = record::init_record();
+            if (a == 1)
+            return 0;
+
+            else 
+            return -1;
         }
         return 2;
     }
@@ -84,7 +89,7 @@ namespace recorddata{
 
         int index = session::do_course_exists(data.student_course);
         if (index == -1){
-            session::add_data(std::string(data.student_course),index);
+            session::add_data(std::string(data.student_course));
         }
 
         else{
@@ -128,8 +133,8 @@ namespace recorddata{
     }
 
     int update_data(datafields::fields & data){
-        fstream file(record_file_path,ios::in | ios::out | ios::binary);
         int index = do_exists(data);
+        fstream file(record_file_path,ios::in | ios::out | ios::binary);
         if (!file.is_open()){
             return 0;
         }
@@ -141,18 +146,19 @@ namespace recorddata{
     }
 
     int delete_data(datafields::fields & data){
-        fstream file(record_file_path,ios::in | ios::out | ios::binary);
-        datafields::fields deleted{};
         int index = do_exists(data);
-        if (!file.is_open()){
-            return 0;
-        }
         if (index == -1){
             return -1;
+        }
+        fstream file(record_file_path,ios::in | ios::out | ios::binary);
+        datafields::fields deleted{};
+        if (!file.is_open()){
+            return 0;
         }
 
         file.seekp(index * sizeof(data),ios::beg);
         file.write(reinterpret_cast<char *>(&deleted), sizeof(deleted));
+        file.close();
         return 1;
         
 
@@ -165,13 +171,13 @@ namespace recorddata{
         if (!file.is_open()){
             return -2;
         }
-        int length = get_length();
         int student_id, i,size;
         file.seekg(0,ios::end);
         size = file.tellg();
         if (size == 0 ){
             return -1;
         }
+        int length = get_length();
         for (i = 0; i < length ; i++){
             file.seekg(i * sizeof(data), ios::beg);
             file.read(reinterpret_cast<char*>(&student_id),sizeof(student_id));
@@ -472,7 +478,7 @@ namespace recorddata{
 
     namespace session{
 
-    int add_data(const std::string & course , int index){
+    int add_data(const std::string & course ){
         fstream file(session_file_path , ios::in | ios::out | ios::binary);
         if (!file.is_open()){
             return 0;
@@ -482,31 +488,31 @@ namespace recorddata{
         strcpy(sessiondata.student_course,course.c_str());
         sessiondata.student_rollno_A = init_rollno_for_new_course();
 
-        if (index == -1){
+
             file.seekg(0,ios::end);
             file.write(reinterpret_cast<char *>(& sessiondata),sizeof(sessiondata));
             file.close();
             return 1;
-        }
+
         return -1;
 
     }
 
     int update_data(const std::string & course, int index){
-        int rollno = get_course_rollno(course);
+        // int rollno = get_course_rollno(course);
         fstream file(session_file_path , ios::in | ios::out | ios::binary);
         if (!file.is_open()){
             return 0;
         }
-        // if (index == -1 || rollno == -1 ){
-        //     return -1;
-        // }
         datafields::sub_rollno data;
-        strcpy(data.student_course,course.c_str());
-        data.student_rollno_A = rollno;
+        file.seekg(8 + (index * sizeof(data)), ios::beg);
+        file.read(reinterpret_cast<char *>(&data), sizeof(data));
+
         data.student_rollno_A++;
-        file.seekg((8+(index*sizeof(data))),ios::beg);
-        file.write(reinterpret_cast<char *>(&data),sizeof(data));
+
+        file.seekp(8 + (index * sizeof(data)), ios::beg);
+        file.write(reinterpret_cast<char *>(&data), sizeof(data));
+    
         file.close();
         return 1;
     }
@@ -859,281 +865,281 @@ namespace show{
 
 
 
-int main(){
+// int main(){
 
 
 
-// recorddata::record::init_record();
-// recorddata::session::inti_session();
+// // recorddata::record::init_record();
+// // recorddata::session::inti_session();
 
-datafields::fields data[5];
+// datafields::fields data[5];
 
-// --- data[0] --- BCA
-strcpy(data[0].student_name, "Arjun Sharma");
-data[0].student_dob = {15, 6, 2001};
-data[0].student_gender = 'M';
-strcpy(data[0].student_course, "BCA");
-data[0].student_section = 'A';
-data[0].student_number_of_subjects = 5;
-data[0].student_enrollement_year = 2021;
-data[0].student_pending_fee = 5000;
-strcpy(data[0].student_contacts.email, "arjun@mail.com");
-strcpy(data[0].student_contacts.phone_no, "9876543210");
-strcpy(data[0].student_address.house, "12B");
-strcpy(data[0].student_address.street, "MG Road");
-strcpy(data[0].student_address.city, "Delhi");
-strcpy(data[0].student_address.state, "Delhi");
-strcpy(data[0].student_address.country, "India");
-strcpy(data[0].student_address.pincode, "110001");
-data[0].student_subjects[0].setsubname(std::string("Mathematics"));
-data[0].student_subjects[0].setsubcode(101); data[0].student_subjects[0].setsubcredits(4);
-data[0].student_subjects[0].setsubtotalmarks(100); data[0].student_subjects[0].setsubobtainedmarks(78);
-data[0].student_subjects[1].setsubname(std::string("C++"));
-data[0].student_subjects[1].setsubcode(102); data[0].student_subjects[1].setsubcredits(3);
-data[0].student_subjects[1].setsubtotalmarks(100); data[0].student_subjects[1].setsubobtainedmarks(85);
-data[0].student_subjects[2].setsubname(std::string("English"));
-data[0].student_subjects[2].setsubcode(103); data[0].student_subjects[2].setsubcredits(2);
-data[0].student_subjects[2].setsubtotalmarks(100); data[0].student_subjects[2].setsubobtainedmarks(72);
-data[0].student_subjects[3].setsubname(std::string("Data Structures"));
-data[0].student_subjects[3].setsubcode(104); data[0].student_subjects[3].setsubcredits(4);
-data[0].student_subjects[3].setsubtotalmarks(100); data[0].student_subjects[3].setsubobtainedmarks(91);
-data[0].student_subjects[4].setsubname(std::string("Networking"));
-data[0].student_subjects[4].setsubcode(105); data[0].student_subjects[4].setsubcredits(3);
-data[0].student_subjects[4].setsubtotalmarks(100); data[0].student_subjects[4].setsubobtainedmarks(66);
+// // --- data[0] --- BCA
+// strcpy(data[0].student_name, "Arjun Sharma");
+// data[0].student_dob = {15, 6, 2001};
+// data[0].student_gender = 'M';
+// strcpy(data[0].student_course, "BCA");
+// data[0].student_section = 'A';
+// data[0].student_number_of_subjects = 5;
+// data[0].student_enrollement_year = 2021;
+// data[0].student_pending_fee = 5000;
+// strcpy(data[0].student_contacts.email, "arjun@mail.com");
+// strcpy(data[0].student_contacts.phone_no, "9876543210");
+// strcpy(data[0].student_address.house, "12B");
+// strcpy(data[0].student_address.street, "MG Road");
+// strcpy(data[0].student_address.city, "Delhi");
+// strcpy(data[0].student_address.state, "Delhi");
+// strcpy(data[0].student_address.country, "India");
+// strcpy(data[0].student_address.pincode, "110001");
+// data[0].student_subjects[0].setsubname(std::string("Mathematics"));
+// data[0].student_subjects[0].setsubcode(101); data[0].student_subjects[0].setsubcredits(4);
+// data[0].student_subjects[0].setsubtotalmarks(100); data[0].student_subjects[0].setsubobtainedmarks(78);
+// data[0].student_subjects[1].setsubname(std::string("C++"));
+// data[0].student_subjects[1].setsubcode(102); data[0].student_subjects[1].setsubcredits(3);
+// data[0].student_subjects[1].setsubtotalmarks(100); data[0].student_subjects[1].setsubobtainedmarks(85);
+// data[0].student_subjects[2].setsubname(std::string("English"));
+// data[0].student_subjects[2].setsubcode(103); data[0].student_subjects[2].setsubcredits(2);
+// data[0].student_subjects[2].setsubtotalmarks(100); data[0].student_subjects[2].setsubobtainedmarks(72);
+// data[0].student_subjects[3].setsubname(std::string("Data Structures"));
+// data[0].student_subjects[3].setsubcode(104); data[0].student_subjects[3].setsubcredits(4);
+// data[0].student_subjects[3].setsubtotalmarks(100); data[0].student_subjects[3].setsubobtainedmarks(91);
+// data[0].student_subjects[4].setsubname(std::string("Networking"));
+// data[0].student_subjects[4].setsubcode(105); data[0].student_subjects[4].setsubcredits(3);
+// data[0].student_subjects[4].setsubtotalmarks(100); data[0].student_subjects[4].setsubobtainedmarks(66);
 
-// --- data[1] --- BCA
-strcpy(data[1].student_name, "Priya Verma");
-data[1].student_dob = {22, 3, 2002};
-data[1].student_gender = 'F';
-strcpy(data[1].student_course, "BCA");
-data[1].student_section = 'B';
-data[1].student_number_of_subjects = 5;
-data[1].student_enrollement_year = 2021;
-data[1].student_pending_fee = 0;
-strcpy(data[1].student_contacts.email, "priya@mail.com");
-strcpy(data[1].student_contacts.phone_no, "9123456780");
-strcpy(data[1].student_address.house, "45A");
-strcpy(data[1].student_address.street, "Park Street");
-strcpy(data[1].student_address.city, "Mumbai");
-strcpy(data[1].student_address.state, "Maharashtra");
-strcpy(data[1].student_address.country, "India");
-strcpy(data[1].student_address.pincode, "400001");
-data[1].student_subjects[0].setsubname(std::string("Mathematics"));
-data[1].student_subjects[0].setsubcode(101); data[1].student_subjects[0].setsubcredits(4);
-data[1].student_subjects[0].setsubtotalmarks(100); data[1].student_subjects[0].setsubobtainedmarks(95);
-data[1].student_subjects[1].setsubname(std::string("C++"));
-data[1].student_subjects[1].setsubcode(102); data[1].student_subjects[1].setsubcredits(3);
-data[1].student_subjects[1].setsubtotalmarks(100); data[1].student_subjects[1].setsubobtainedmarks(92);
-data[1].student_subjects[2].setsubname(std::string("English"));
-data[1].student_subjects[2].setsubcode(103); data[1].student_subjects[2].setsubcredits(2);
-data[1].student_subjects[2].setsubtotalmarks(100); data[1].student_subjects[2].setsubobtainedmarks(85);
-data[1].student_subjects[3].setsubname(std::string("Data Structures"));
-data[1].student_subjects[3].setsubcode(104); data[1].student_subjects[3].setsubcredits(4);
-data[1].student_subjects[3].setsubtotalmarks(100); data[1].student_subjects[3].setsubobtainedmarks(79);
-data[1].student_subjects[4].setsubname(std::string("Networking"));
-data[1].student_subjects[4].setsubcode(105); data[1].student_subjects[4].setsubcredits(3);
-data[1].student_subjects[4].setsubtotalmarks(100); data[1].student_subjects[4].setsubobtainedmarks(88);
+// // --- data[1] --- BCA
+// strcpy(data[1].student_name, "Priya Verma");
+// data[1].student_dob = {22, 3, 2002};
+// data[1].student_gender = 'F';
+// strcpy(data[1].student_course, "BCA");
+// data[1].student_section = 'B';
+// data[1].student_number_of_subjects = 5;
+// data[1].student_enrollement_year = 2021;
+// data[1].student_pending_fee = 0;
+// strcpy(data[1].student_contacts.email, "priya@mail.com");
+// strcpy(data[1].student_contacts.phone_no, "9123456780");
+// strcpy(data[1].student_address.house, "45A");
+// strcpy(data[1].student_address.street, "Park Street");
+// strcpy(data[1].student_address.city, "Mumbai");
+// strcpy(data[1].student_address.state, "Maharashtra");
+// strcpy(data[1].student_address.country, "India");
+// strcpy(data[1].student_address.pincode, "400001");
+// data[1].student_subjects[0].setsubname(std::string("Mathematics"));
+// data[1].student_subjects[0].setsubcode(101); data[1].student_subjects[0].setsubcredits(4);
+// data[1].student_subjects[0].setsubtotalmarks(100); data[1].student_subjects[0].setsubobtainedmarks(95);
+// data[1].student_subjects[1].setsubname(std::string("C++"));
+// data[1].student_subjects[1].setsubcode(102); data[1].student_subjects[1].setsubcredits(3);
+// data[1].student_subjects[1].setsubtotalmarks(100); data[1].student_subjects[1].setsubobtainedmarks(92);
+// data[1].student_subjects[2].setsubname(std::string("English"));
+// data[1].student_subjects[2].setsubcode(103); data[1].student_subjects[2].setsubcredits(2);
+// data[1].student_subjects[2].setsubtotalmarks(100); data[1].student_subjects[2].setsubobtainedmarks(85);
+// data[1].student_subjects[3].setsubname(std::string("Data Structures"));
+// data[1].student_subjects[3].setsubcode(104); data[1].student_subjects[3].setsubcredits(4);
+// data[1].student_subjects[3].setsubtotalmarks(100); data[1].student_subjects[3].setsubobtainedmarks(79);
+// data[1].student_subjects[4].setsubname(std::string("Networking"));
+// data[1].student_subjects[4].setsubcode(105); data[1].student_subjects[4].setsubcredits(3);
+// data[1].student_subjects[4].setsubtotalmarks(100); data[1].student_subjects[4].setsubobtainedmarks(88);
 
-// --- data[2] --- MCA
-strcpy(data[2].student_name, "Rohit Mehta");
-data[2].student_dob = {8, 11, 2000};
-data[2].student_gender = 'M';
-strcpy(data[2].student_course, "MCA");
-data[2].student_section = 'A';
-data[2].student_number_of_subjects = 5;
-data[2].student_enrollement_year = 2022;
-data[2].student_pending_fee = 12000;
-strcpy(data[2].student_contacts.email, "rohit@mail.com");
-strcpy(data[2].student_contacts.phone_no, "9988776655");
-strcpy(data[2].student_address.house, "7C");
-strcpy(data[2].student_address.street, "Lake View");
-strcpy(data[2].student_address.city, "Pune");
-strcpy(data[2].student_address.state, "Maharashtra");
-strcpy(data[2].student_address.country, "India");
-strcpy(data[2].student_address.pincode, "411001");
-data[2].student_subjects[0].setsubname(std::string("Algorithms"));
-data[2].student_subjects[0].setsubcode(201); data[2].student_subjects[0].setsubcredits(4);
-data[2].student_subjects[0].setsubtotalmarks(100); data[2].student_subjects[0].setsubobtainedmarks(55);
-data[2].student_subjects[1].setsubname(std::string("DBMS"));
-data[2].student_subjects[1].setsubcode(202); data[2].student_subjects[1].setsubcredits(4);
-data[2].student_subjects[1].setsubtotalmarks(100); data[2].student_subjects[1].setsubobtainedmarks(60);
-data[2].student_subjects[2].setsubname(std::string("OS"));
-data[2].student_subjects[2].setsubcode(203); data[2].student_subjects[2].setsubcredits(3);
-data[2].student_subjects[2].setsubtotalmarks(100); data[2].student_subjects[2].setsubobtainedmarks(48);
-data[2].student_subjects[3].setsubname(std::string("Networks"));
-data[2].student_subjects[3].setsubcode(204); data[2].student_subjects[3].setsubcredits(3);
-data[2].student_subjects[3].setsubtotalmarks(100); data[2].student_subjects[3].setsubobtainedmarks(71);
-data[2].student_subjects[4].setsubname(std::string("Python"));
-data[2].student_subjects[4].setsubcode(205); data[2].student_subjects[4].setsubcredits(3);
-data[2].student_subjects[4].setsubtotalmarks(100); data[2].student_subjects[4].setsubobtainedmarks(83);
+// // --- data[2] --- MCA
+// strcpy(data[2].student_name, "Rohit Mehta");
+// data[2].student_dob = {8, 11, 2000};
+// data[2].student_gender = 'M';
+// strcpy(data[2].student_course, "MCA");
+// data[2].student_section = 'A';
+// data[2].student_number_of_subjects = 5;
+// data[2].student_enrollement_year = 2022;
+// data[2].student_pending_fee = 12000;
+// strcpy(data[2].student_contacts.email, "rohit@mail.com");
+// strcpy(data[2].student_contacts.phone_no, "9988776655");
+// strcpy(data[2].student_address.house, "7C");
+// strcpy(data[2].student_address.street, "Lake View");
+// strcpy(data[2].student_address.city, "Pune");
+// strcpy(data[2].student_address.state, "Maharashtra");
+// strcpy(data[2].student_address.country, "India");
+// strcpy(data[2].student_address.pincode, "411001");
+// data[2].student_subjects[0].setsubname(std::string("Algorithms"));
+// data[2].student_subjects[0].setsubcode(201); data[2].student_subjects[0].setsubcredits(4);
+// data[2].student_subjects[0].setsubtotalmarks(100); data[2].student_subjects[0].setsubobtainedmarks(55);
+// data[2].student_subjects[1].setsubname(std::string("DBMS"));
+// data[2].student_subjects[1].setsubcode(202); data[2].student_subjects[1].setsubcredits(4);
+// data[2].student_subjects[1].setsubtotalmarks(100); data[2].student_subjects[1].setsubobtainedmarks(60);
+// data[2].student_subjects[2].setsubname(std::string("OS"));
+// data[2].student_subjects[2].setsubcode(203); data[2].student_subjects[2].setsubcredits(3);
+// data[2].student_subjects[2].setsubtotalmarks(100); data[2].student_subjects[2].setsubobtainedmarks(48);
+// data[2].student_subjects[3].setsubname(std::string("Networks"));
+// data[2].student_subjects[3].setsubcode(204); data[2].student_subjects[3].setsubcredits(3);
+// data[2].student_subjects[3].setsubtotalmarks(100); data[2].student_subjects[3].setsubobtainedmarks(71);
+// data[2].student_subjects[4].setsubname(std::string("Python"));
+// data[2].student_subjects[4].setsubcode(205); data[2].student_subjects[4].setsubcredits(3);
+// data[2].student_subjects[4].setsubtotalmarks(100); data[2].student_subjects[4].setsubobtainedmarks(83);
 
-// --- data[3] --- BSC
-strcpy(data[3].student_name, "Sneha Patel");
-data[3].student_dob = {30, 7, 2003};
-data[3].student_gender = 'F';
-strcpy(data[3].student_course, "BSC");
-data[3].student_section = 'A';
-data[3].student_number_of_subjects = 5;
-data[3].student_enrollement_year = 2022;
-data[3].student_pending_fee = 3000;
-strcpy(data[3].student_contacts.email, "sneha@mail.com");
-strcpy(data[3].student_contacts.phone_no, "9012345678");
-strcpy(data[3].student_address.house, "3F");
-strcpy(data[3].student_address.street, "Rose Garden");
-strcpy(data[3].student_address.city, "Ahmedabad");
-strcpy(data[3].student_address.state, "Gujarat");
-strcpy(data[3].student_address.country, "India");
-strcpy(data[3].student_address.pincode, "380001");
-data[3].student_subjects[0].setsubname(std::string("Physics"));
-data[3].student_subjects[0].setsubcode(301); data[3].student_subjects[0].setsubcredits(4);
-data[3].student_subjects[0].setsubtotalmarks(100); data[3].student_subjects[0].setsubobtainedmarks(62);
-data[3].student_subjects[1].setsubname(std::string("Chemistry"));
-data[3].student_subjects[1].setsubcode(302); data[3].student_subjects[1].setsubcredits(4);
-data[3].student_subjects[1].setsubtotalmarks(100); data[3].student_subjects[1].setsubobtainedmarks(58);
-data[3].student_subjects[2].setsubname(std::string("Biology"));
-data[3].student_subjects[2].setsubcode(303); data[3].student_subjects[2].setsubcredits(3);
-data[3].student_subjects[2].setsubtotalmarks(100); data[3].student_subjects[2].setsubobtainedmarks(74);
-data[3].student_subjects[3].setsubname(std::string("Mathematics"));
-data[3].student_subjects[3].setsubcode(304); data[3].student_subjects[3].setsubcredits(3);
-data[3].student_subjects[3].setsubtotalmarks(100); data[3].student_subjects[3].setsubobtainedmarks(80);
-data[3].student_subjects[4].setsubname(std::string("English"));
-data[3].student_subjects[4].setsubcode(305); data[3].student_subjects[4].setsubcredits(2);
-data[3].student_subjects[4].setsubtotalmarks(100); data[3].student_subjects[4].setsubobtainedmarks(67);
+// // --- data[3] --- BSC
+// strcpy(data[3].student_name, "Sneha Patel");
+// data[3].student_dob = {30, 7, 2003};
+// data[3].student_gender = 'F';
+// strcpy(data[3].student_course, "BSC");
+// data[3].student_section = 'A';
+// data[3].student_number_of_subjects = 5;
+// data[3].student_enrollement_year = 2022;
+// data[3].student_pending_fee = 3000;
+// strcpy(data[3].student_contacts.email, "sneha@mail.com");
+// strcpy(data[3].student_contacts.phone_no, "9012345678");
+// strcpy(data[3].student_address.house, "3F");
+// strcpy(data[3].student_address.street, "Rose Garden");
+// strcpy(data[3].student_address.city, "Ahmedabad");
+// strcpy(data[3].student_address.state, "Gujarat");
+// strcpy(data[3].student_address.country, "India");
+// strcpy(data[3].student_address.pincode, "380001");
+// data[3].student_subjects[0].setsubname(std::string("Physics"));
+// data[3].student_subjects[0].setsubcode(301); data[3].student_subjects[0].setsubcredits(4);
+// data[3].student_subjects[0].setsubtotalmarks(100); data[3].student_subjects[0].setsubobtainedmarks(62);
+// data[3].student_subjects[1].setsubname(std::string("Chemistry"));
+// data[3].student_subjects[1].setsubcode(302); data[3].student_subjects[1].setsubcredits(4);
+// data[3].student_subjects[1].setsubtotalmarks(100); data[3].student_subjects[1].setsubobtainedmarks(58);
+// data[3].student_subjects[2].setsubname(std::string("Biology"));
+// data[3].student_subjects[2].setsubcode(303); data[3].student_subjects[2].setsubcredits(3);
+// data[3].student_subjects[2].setsubtotalmarks(100); data[3].student_subjects[2].setsubobtainedmarks(74);
+// data[3].student_subjects[3].setsubname(std::string("Mathematics"));
+// data[3].student_subjects[3].setsubcode(304); data[3].student_subjects[3].setsubcredits(3);
+// data[3].student_subjects[3].setsubtotalmarks(100); data[3].student_subjects[3].setsubobtainedmarks(80);
+// data[3].student_subjects[4].setsubname(std::string("English"));
+// data[3].student_subjects[4].setsubcode(305); data[3].student_subjects[4].setsubcredits(2);
+// data[3].student_subjects[4].setsubtotalmarks(100); data[3].student_subjects[4].setsubobtainedmarks(67);
 
-// --- data[4] --- BSC
-strcpy(data[4].student_name, "Karan Singh");
-data[4].student_dob = {5, 1, 2001};
-data[4].student_gender = 'M';
-strcpy(data[4].student_course, "BSC");
-data[4].student_section = 'B';
-data[4].student_number_of_subjects = 5;
-data[4].student_enrollement_year = 2022;
-data[4].student_pending_fee = 8000;
-strcpy(data[4].student_contacts.email, "karan@mail.com");
-strcpy(data[4].student_contacts.phone_no, "9871234560");
-strcpy(data[4].student_address.house, "22D");
-strcpy(data[4].student_address.street, "Civil Lines");
-strcpy(data[4].student_address.city, "Jaipur");
-strcpy(data[4].student_address.state, "Rajasthan");
-strcpy(data[4].student_address.country, "India");
-strcpy(data[4].student_address.pincode, "302001");
-data[4].student_subjects[0].setsubname(std::string("Physics"));
-data[4].student_subjects[0].setsubcode(301); data[4].student_subjects[0].setsubcredits(4);
-data[4].student_subjects[0].setsubtotalmarks(100); data[4].student_subjects[0].setsubobtainedmarks(70);
-data[4].student_subjects[1].setsubname(std::string("Chemistry"));
-data[4].student_subjects[1].setsubcode(302); data[4].student_subjects[1].setsubcredits(4);
-data[4].student_subjects[1].setsubtotalmarks(100); data[4].student_subjects[1].setsubobtainedmarks(75);
-data[4].student_subjects[2].setsubname(std::string("Biology"));
-data[4].student_subjects[2].setsubcode(303); data[4].student_subjects[2].setsubcredits(3);
-data[4].student_subjects[2].setsubtotalmarks(100); data[4].student_subjects[2].setsubobtainedmarks(68);
-data[4].student_subjects[3].setsubname(std::string("Mathematics"));
-data[4].student_subjects[3].setsubcode(304); data[4].student_subjects[3].setsubcredits(3);
-data[4].student_subjects[3].setsubtotalmarks(100); data[4].student_subjects[3].setsubobtainedmarks(82);
-data[4].student_subjects[4].setsubname(std::string("English"));
-data[4].student_subjects[4].setsubcode(305); data[4].student_subjects[4].setsubcredits(2);
-data[4].student_subjects[4].setsubtotalmarks(100); data[4].student_subjects[4].setsubobtainedmarks(90);
+// // --- data[4] --- BSC
+// strcpy(data[4].student_name, "Karan Singh");
+// data[4].student_dob = {5, 1, 2001};
+// data[4].student_gender = 'M';
+// strcpy(data[4].student_course, "BSC");
+// data[4].student_section = 'B';
+// data[4].student_number_of_subjects = 5;
+// data[4].student_enrollement_year = 2022;
+// data[4].student_pending_fee = 8000;
+// strcpy(data[4].student_contacts.email, "karan@mail.com");
+// strcpy(data[4].student_contacts.phone_no, "9871234560");
+// strcpy(data[4].student_address.house, "22D");
+// strcpy(data[4].student_address.street, "Civil Lines");
+// strcpy(data[4].student_address.city, "Jaipur");
+// strcpy(data[4].student_address.state, "Rajasthan");
+// strcpy(data[4].student_address.country, "India");
+// strcpy(data[4].student_address.pincode, "302001");
+// data[4].student_subjects[0].setsubname(std::string("Physics"));
+// data[4].student_subjects[0].setsubcode(301); data[4].student_subjects[0].setsubcredits(4);
+// data[4].student_subjects[0].setsubtotalmarks(100); data[4].student_subjects[0].setsubobtainedmarks(70);
+// data[4].student_subjects[1].setsubname(std::string("Chemistry"));
+// data[4].student_subjects[1].setsubcode(302); data[4].student_subjects[1].setsubcredits(4);
+// data[4].student_subjects[1].setsubtotalmarks(100); data[4].student_subjects[1].setsubobtainedmarks(75);
+// data[4].student_subjects[2].setsubname(std::string("Biology"));
+// data[4].student_subjects[2].setsubcode(303); data[4].student_subjects[2].setsubcredits(3);
+// data[4].student_subjects[2].setsubtotalmarks(100); data[4].student_subjects[2].setsubobtainedmarks(68);
+// data[4].student_subjects[3].setsubname(std::string("Mathematics"));
+// data[4].student_subjects[3].setsubcode(304); data[4].student_subjects[3].setsubcredits(3);
+// data[4].student_subjects[3].setsubtotalmarks(100); data[4].student_subjects[3].setsubobtainedmarks(82);
+// data[4].student_subjects[4].setsubname(std::string("English"));
+// data[4].student_subjects[4].setsubcode(305); data[4].student_subjects[4].setsubcredits(2);
+// data[4].student_subjects[4].setsubtotalmarks(100); data[4].student_subjects[4].setsubobtainedmarks(90);
 
-datafields::fields dataupdate;
+// datafields::fields dataupdate;
 
-strcpy(dataupdate.student_name, "Priya Verma");
-dataupdate.student_dob = {22, 3, 2002};
-dataupdate.student_gender = 'F';
-strcpy(dataupdate.student_course, "BCA");
-dataupdate.student_section = 'B';
-dataupdate.student_number_of_subjects = 5;
-dataupdate.student_enrollement_year = 2021;
-dataupdate.student_pending_fee = 500;
-strcpy(dataupdate.student_contacts.email, "priya@mail.com");
-strcpy(dataupdate.student_contacts.phone_no, "9123456780");
-strcpy(dataupdate.student_address.house, "45A");
-strcpy(dataupdate.student_address.street, "Park Street");
-strcpy(dataupdate.student_address.city, "Mumbai");
-strcpy(dataupdate.student_address.state, "Maharashtra");
-strcpy(dataupdate.student_address.country, "India");
-strcpy(dataupdate.student_address.pincode, "400001");
-dataupdate.student_subjects[0].setsubname(std::string("Mathematics"));
-dataupdate.student_subjects[0].setsubcode(101); dataupdate.student_subjects[0].setsubcredits(4);
-dataupdate.student_subjects[0].setsubtotalmarks(100); dataupdate.student_subjects[0].setsubobtainedmarks(99);
-dataupdate.student_subjects[1].setsubname(std::string("C++"));
-dataupdate.student_subjects[1].setsubcode(102); dataupdate.student_subjects[1].setsubcredits(3);
-dataupdate.student_subjects[1].setsubtotalmarks(100); dataupdate.student_subjects[1].setsubobtainedmarks(99);
-dataupdate.student_subjects[2].setsubname(std::string("English"));
-dataupdate.student_subjects[2].setsubcode(103); dataupdate.student_subjects[2].setsubcredits(2);
-dataupdate.student_subjects[2].setsubtotalmarks(100); dataupdate.student_subjects[2].setsubobtainedmarks(99);
-dataupdate.student_subjects[3].setsubname(std::string("Data Structures"));
-dataupdate.student_subjects[3].setsubcode(104); dataupdate.student_subjects[3].setsubcredits(4);
-dataupdate.student_subjects[3].setsubtotalmarks(100); dataupdate.student_subjects[3].setsubobtainedmarks(99);
-dataupdate.student_subjects[4].setsubname(std::string("Networking"));
-dataupdate.student_subjects[4].setsubcode(105); dataupdate.student_subjects[4].setsubcredits(3);
-dataupdate.student_subjects[4].setsubtotalmarks(100); dataupdate.student_subjects[4].setsubobtainedmarks(99);
+// strcpy(dataupdate.student_name, "Priya Verma");
+// dataupdate.student_dob = {22, 3, 2002};
+// dataupdate.student_gender = 'F';
+// strcpy(dataupdate.student_course, "BCA");
+// dataupdate.student_section = 'B';
+// dataupdate.student_number_of_subjects = 5;
+// dataupdate.student_enrollement_year = 2021;
+// dataupdate.student_pending_fee = 500;
+// strcpy(dataupdate.student_contacts.email, "priya@mail.com");
+// strcpy(dataupdate.student_contacts.phone_no, "9123456780");
+// strcpy(dataupdate.student_address.house, "45A");
+// strcpy(dataupdate.student_address.street, "Park Street");
+// strcpy(dataupdate.student_address.city, "Mumbai");
+// strcpy(dataupdate.student_address.state, "Maharashtra");
+// strcpy(dataupdate.student_address.country, "India");
+// strcpy(dataupdate.student_address.pincode, "400001");
+// dataupdate.student_subjects[0].setsubname(std::string("Mathematics"));
+// dataupdate.student_subjects[0].setsubcode(101); dataupdate.student_subjects[0].setsubcredits(4);
+// dataupdate.student_subjects[0].setsubtotalmarks(100); dataupdate.student_subjects[0].setsubobtainedmarks(99);
+// dataupdate.student_subjects[1].setsubname(std::string("C++"));
+// dataupdate.student_subjects[1].setsubcode(102); dataupdate.student_subjects[1].setsubcredits(3);
+// dataupdate.student_subjects[1].setsubtotalmarks(100); dataupdate.student_subjects[1].setsubobtainedmarks(99);
+// dataupdate.student_subjects[2].setsubname(std::string("English"));
+// dataupdate.student_subjects[2].setsubcode(103); dataupdate.student_subjects[2].setsubcredits(2);
+// dataupdate.student_subjects[2].setsubtotalmarks(100); dataupdate.student_subjects[2].setsubobtainedmarks(99);
+// dataupdate.student_subjects[3].setsubname(std::string("Data Structures"));
+// dataupdate.student_subjects[3].setsubcode(104); dataupdate.student_subjects[3].setsubcredits(4);
+// dataupdate.student_subjects[3].setsubtotalmarks(100); dataupdate.student_subjects[3].setsubobtainedmarks(99);
+// dataupdate.student_subjects[4].setsubname(std::string("Networking"));
+// dataupdate.student_subjects[4].setsubcode(105); dataupdate.student_subjects[4].setsubcredits(3);
+// dataupdate.student_subjects[4].setsubtotalmarks(100); dataupdate.student_subjects[4].setsubobtainedmarks(99);
 
-recorddata::connect(data[0]);
-recorddata::connect(data[1]);
-recorddata::connect(data[2]);
-recorddata::connect(data[3]);
-recorddata::connect(data[4]);
+// recorddata::connect(data[0]);
+// recorddata::connect(data[1]);
+// recorddata::connect(data[2]);
+// recorddata::connect(data[3]);
+// recorddata::connect(data[4]);
 
-cout << "Do course exists : (it gives where it exist index ) : "<<recorddata::session::do_course_exists("BSC")<<endl;
-cout << "Get course roll no bca: " << recorddata::session::get_course_rollno("BCA")<<endl;
-cout << "ID bca: " << data[0].student_id<<endl;
-cout << "ID bca: " << data[1].student_id<<endl;
-cout << "ID mcs: " << data[2].student_id<<endl;
-cout << "ID bsc: " << data[3].student_id<<endl;
-cout << "ID bsc: " << data[4].student_id<<endl;
-cout << "Get course roll no bsc: " << recorddata::session::get_course_rollno("BSC")<<endl;
-cout << "Get course roll no mca: " << recorddata::session::get_course_rollno("MCA")<<endl;
-cout << "Session length no of corses :" << recorddata::session::get_length()<<endl;
-cout << "get std id A :" << recorddata::session::get_student_id_A()<<endl;
-// cout << "get init roll no :" << recorddata::session::init_rollno_for_new_course()<<endl;
+// cout << "Do course exists : (it gives where it exist index ) : "<<recorddata::session::do_course_exists("BSC")<<endl;
+// cout << "Get course roll no bca: " << recorddata::session::get_course_rollno("BCA")<<endl;
+// cout << "ID bca: " << data[0].student_id<<endl;
+// cout << "ID bca: " << data[1].student_id<<endl;
+// cout << "ID mcs: " << data[2].student_id<<endl;
+// cout << "ID bsc: " << data[3].student_id<<endl;
+// cout << "ID bsc: " << data[4].student_id<<endl;
+// cout << "Get course roll no bsc: " << recorddata::session::get_course_rollno("BSC")<<endl;
+// cout << "Get course roll no mca: " << recorddata::session::get_course_rollno("MCA")<<endl;
+// cout << "Session length no of corses :" << recorddata::session::get_length()<<endl;
+// cout << "get std id A :" << recorddata::session::get_student_id_A()<<endl;
+// // cout << "get init roll no :" << recorddata::session::init_rollno_for_new_course()<<endl;
 
-int a = recorddata::session::get_length();
-datafields::sub_rollno * sessiondata = recorddata::session::get_data();
+// int a = recorddata::session::get_length();
+// datafields::sub_rollno * sessiondata = recorddata::session::get_data();
 
-for (int i = 0 ; i < a ; i++){
-    std::cout<<"course : "<<sessiondata[i].student_course<<endl;
-    std::cout<<"Roll no : "<<sessiondata[i].student_rollno_A<<endl;
-}
+// for (int i = 0 ; i < a ; i++){
+//     std::cout<<"course : "<<sessiondata[i].student_course<<endl;
+//     std::cout<<"Roll no : "<<sessiondata[i].student_rollno_A<<endl;
+// }
 
 
 
-cout<<"Length : "<<recorddata::record::get_length()<<endl;
-cout<<"DO Exists: "<<recorddata::record::do_exists(data[3])<<endl; // didnt added validation to check the duplicate data it checks though the student id but it will always be assigned new
-// cout<<"DElete : "<<recorddata::record::delete_data(data[3])<<endl; // 1 sucess 0 file not opened -1 not found
-cout<<"DO Exists: "<<recorddata::record::do_exists(data[3])<<endl; // -1 not found
-cout<<"BSC NO OF RECORDs : "<<recorddata::fetch::no_of_records_by_course("BSC")<<endl; // 20 beacause data also delted one
-cout<<"BCA NO OF RECORDs : "<<recorddata::fetch::no_of_records_by_course("BCA")<<endl; // 40 
-cout<<"MCA NO OF RECORDs : "<<recorddata::fetch::no_of_records_by_course("MCA")<<endl; // 20 
-int b = recorddata::record::get_length(); 
+// cout<<"Length : "<<recorddata::record::get_length()<<endl;
+// cout<<"DO Exists: "<<recorddata::record::do_exists(data[3])<<endl; // didnt added validation to check the duplicate data it checks though the student id but it will always be assigned new
+// // cout<<"DElete : "<<recorddata::record::delete_data(data[3])<<endl; // 1 sucess 0 file not opened -1 not found
+// cout<<"DO Exists: "<<recorddata::record::do_exists(data[3])<<endl; // -1 not found
+// cout<<"BSC NO OF RECORDs : "<<recorddata::fetch::no_of_records_by_course("BSC")<<endl; // 20 beacause data also delted one
+// cout<<"BCA NO OF RECORDs : "<<recorddata::fetch::no_of_records_by_course("BCA")<<endl; // 40 
+// cout<<"MCA NO OF RECORDs : "<<recorddata::fetch::no_of_records_by_course("MCA")<<endl; // 20 
+// int b = recorddata::record::get_length(); 
 
-datafields::fields recorddata1 = recorddata::fetch::record_by_key(4);
-cout<<"_________"<<endl;
-cout << "NAME : " <<recorddata1.student_name<<endl;
-cout << "NO OF SUB : "<<recorddata1.student_number_of_subjects<<endl;
-cout << "COURSE: "<<recorddata1.student_course<<endl;
-cout << "EMAIL : "<<recorddata1.student_contacts.email<<endl;
-cout << "DOB : "<<recorddata1.student_dob.day<<" "<<recorddata1.student_dob.month<<" "<<recorddata1.student_dob.year<<endl;
+// datafields::fields recorddata1 = recorddata::fetch::record_by_key(4);
+// cout<<"_________"<<endl;
+// cout << "NAME : " <<recorddata1.student_name<<endl;
+// cout << "NO OF SUB : "<<recorddata1.student_number_of_subjects<<endl;
+// cout << "COURSE: "<<recorddata1.student_course<<endl;
+// cout << "EMAIL : "<<recorddata1.student_contacts.email<<endl;
+// cout << "DOB : "<<recorddata1.student_dob.day<<" "<<recorddata1.student_dob.month<<" "<<recorddata1.student_dob.year<<endl;
 
-datafields::fields * f = recorddata::fetch::all_record();
+// datafields::fields * f = recorddata::fetch::all_record();
 
-for (int j = 0 ; j < b ; j++ ){
-    cout << "______________"<< endl;
-    cout << "COURSE :: "<< f[j].student_course<<endl;
-    cout << "NO OF SUB :: "<<f[j].student_number_of_subjects<<endl;
-    cout <<"NAME :<<"<< f[j].student_name<<endl;
-    cout << "______________"<< endl;
-}
+// for (int j = 0 ; j < b ; j++ ){
+//     cout << "______________"<< endl;
+//     cout << "COURSE :: "<< f[j].student_course<<endl;
+//     cout << "NO OF SUB :: "<<f[j].student_number_of_subjects<<endl;
+//     cout <<"NAME :<<"<< f[j].student_name<<endl;
+//     cout << "______________"<< endl;
+// }
 
-cout<< recorddata::fetch::export_csv_by_course("BCA");
-cout<< recorddata::fetch::export_csv_by_course("BSC");
-cout<< recorddata::fetch::export_csv_by_course("MCA");
-cout<< recorddata::fetch::export_csv_all()<<endl;
-recorddata::show::all_records(0);
-recorddata::show::all_records(1);
-recorddata::show::session_data();
-recorddata::show::records_by_course("BCA");
-recorddata::show::records_by_course("BSC");
-recorddata::show::records_by_course("MCA");
-recorddata::show::records_by_course("BCA",1);
-recorddata::show::records_by_course("BSC",1);
-recorddata::show::records_by_course("MCA",1);
-}
+// cout<< recorddata::fetch::export_csv_by_course("BCA");
+// cout<< recorddata::fetch::export_csv_by_course("BSC");
+// cout<< recorddata::fetch::export_csv_by_course("MCA");
+// cout<< recorddata::fetch::export_csv_all()<<endl;
+// recorddata::show::all_records(0);
+// recorddata::show::all_records(1);
+// recorddata::show::session_data();
+// recorddata::show::records_by_course("BCA");
+// recorddata::show::records_by_course("BSC");
+// recorddata::show::records_by_course("MCA");
+// recorddata::show::records_by_course("BCA",1);
+// recorddata::show::records_by_course("BSC",1);
+// recorddata::show::records_by_course("MCA",1);
+// }
