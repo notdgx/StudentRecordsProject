@@ -132,9 +132,13 @@ namespace templates{
 
 
     /// SHOW TEMPLATE 
-    void show_template(const std::string & template_name){
+    int show_template(const std::string & template_name){
 
         Subject * data = return_template_data(template_name);
+        if (data == nullptr){
+            return 0;
+        }
+
         cout << " ------------------------------------------------------------------------------------- " << endl;
         cout << "| Template Name : " << std::left << std::setw(65) << template_name << "   |" << endl;
         cout << " ------------------------------------------------------------------------------------- " << endl;
@@ -149,6 +153,7 @@ namespace templates{
 
             cout << " ------------------------------------------------------------------------------------- " << endl;
             delete[] data;
+            return 1;
     }
 
 
@@ -202,9 +207,22 @@ namespace templates{
 
     // TEMPLATE INDEX SHOW 
 
-    void show_template_index(){
+    int show_template_index(){
+        int size ;
         templates::templateindex data;
         ifstream file("../templates/00_templateindex", ios::binary);
+
+        if (!file.is_open()){
+            return 0;
+        }
+
+        file.seekg(0,ios::end);
+        size = file.tellg();
+        file.seekg(0,ios::beg);
+
+        if (size == 0){
+            return 0;
+        }
 
         cout << " ------------------------------------- " << endl;
         cout << "| Template Name      | No of Subjects |"<<endl;
@@ -226,6 +244,7 @@ namespace templates{
         }
         
         cout << " ------------------------------------- " << endl;
+        return 1;
 
     }
 

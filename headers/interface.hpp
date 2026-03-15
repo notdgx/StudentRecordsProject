@@ -21,6 +21,8 @@ namespace interface{
         void show_template_index();
         void show_template_by_name();
 
+        
+
         void delete_record();
         void delete_template();
         void modify_template();

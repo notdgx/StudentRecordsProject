@@ -27,7 +27,7 @@ namespace templates{
     int create_template(const std::string & template_name , int number_of_subjects );
     void delete_template(const std::string & template_name);
     Subject * return_template_data(const std::string & template_name);
-    void show_template(const std::string & template_name);
-    void show_template_index();
+    int show_template(const std::string & template_name);
+    int show_template_index();
 
 }
