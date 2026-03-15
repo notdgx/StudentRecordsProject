@@ -1,18 +1,8 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <limits>
-#include "./subjects.cpp"
-#include <iomanip>
-#include <filesystem>
+#include "../headers/templates.hpp"
 
 
 namespace templates{
 
-    struct templateindex{
-        char template_name_in_index[20];
-        int template_N_in_index;
-        };
 
     Subject enter_and_return_sub();
     ofstream file_exists_check(const std::string & file_name , int number_of_subjects );

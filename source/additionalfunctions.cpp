@@ -1,6 +1,4 @@
-#include <iostream>
-#include <string>
-#include "subjects.cpp"
+#include "../headers/additionalfucntions.hpp"
 
 namespace additionalfunctions{
 
