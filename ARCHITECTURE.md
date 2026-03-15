@@ -13,19 +13,13 @@
 
 - delete record 
 - delete template 
+- modify tempalate
 
 - export csv all
 - export csv by course 
 
 - open record by id , rollno : in the end if any modification connect() 
-
-
-## object oriented
-
-- add student : if subject = template exist then ask to use or reenter 
-- if template course can only change obtained marks only 
-- if custom course then : add course data option , save as template option unlock
-- modify student data : 
+	- modify student data : 
 	- modify name
 	- modify dob
 	- modify gender 
@@ -35,6 +29,13 @@
 	- modify fee
 	- modify contact 
 	- modify address
+
+
+## object oriented
+
+- add student : if subject = template exist then ask to use or reenter 
+- if template course can only change obtained marks only 
+- if custom course then : add course data option , save as template option unlock
 - use additional fucntions 
 
 
