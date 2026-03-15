@@ -30,8 +30,6 @@ namespace interface{
         void export_csv();
         void export_csv_by_course();
 
-        void open_record();
-
     } 
 
     namespace object{
