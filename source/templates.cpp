@@ -27,13 +27,72 @@ namespace templates{
             Subject sub = templates::enter_and_return_sub();
             file.write(reinterpret_cast<char*>(& sub),sizeof(sub));
             std::cout << "-----------------------------\n\n" ;
-        
+            
         }
+        return 1;
         }
         else {
             return -1;
         }
     }
+
+    // overloading 1 
+    int modify_template(const std::string & template_name){
+        char replace;
+        int index,n;
+        index = templates::do_template_exist(template_name);
+        string path = "../templates/" + template_name + ".template";
+        ifstream file(path,ios::in | ios::binary);
+        if (!file.is_open() || index == -1){
+            return 0;
+        } 
+        file.close();
+        ofstream file1(path,ios::out | ios::binary);
+        templates::templateindex data = templates::give_template_data_at_index(index);
+        n = data.template_N_in_index;
+            
+        for (int i = 0 ; i < n ; i++){
+            std::cout << "Enter the Subject " << i+1 << " Details : \n" ;
+            std::cout << "-----------------------------\n\n" ;
+            Subject sub = templates::enter_and_return_sub();
+            file1.write(reinterpret_cast<char*>(& sub),sizeof(sub));
+            std::cout << "-----------------------------\n\n" ;
+        }
+            return 1;
+
+
+    }
+
+    // overloading 2
+    int modify_template(const std::string & template_name, int n){
+        char replace;
+        int index;
+        index = templates::do_template_exist(template_name);
+        string path = "../templates/" + template_name + ".template";
+        ifstream file(path,ios::in | ios::binary);
+        if (!file.is_open() || index == -1){
+            return 0;
+        } 
+        file.close();
+        ofstream file1(path,ios::out | ios::binary);
+        templates::templateindex data ;
+        std::strcpy(data.template_name_in_index,template_name.c_str());
+        data.template_N_in_index = n;
+            
+        for (int i = 0 ; i < n ; i++){
+            std::cout << "Enter the Subject " << i+1 << " Details : \n" ;
+            std::cout << "-----------------------------\n\n" ;
+            Subject sub = templates::enter_and_return_sub();
+            file1.write(reinterpret_cast<char*>(& sub),sizeof(sub));
+            std::cout << "-----------------------------\n\n" ;
+        }
+        file1.close();
+        templates::replace_template_index(template_name,n,index);
+        return 1;
+
+
+    }
+
 
     // DELETEING TEMPLATE 
 
@@ -76,7 +135,7 @@ namespace templates{
 
         else if(file.is_open())
         {
-            cout << "File Exists Do You want to replace it ? (y/n) :";
+            cout << "Template Exists Do You want to replace it ? (y/n) :";
             cin >> replace ;
 
             if (replace == 'Y' || replace == 'y' ){

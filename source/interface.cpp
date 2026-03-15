@@ -104,8 +104,23 @@ namespace interface{
             break;
         }
     }while(true);
-    }
+}
 
+// _______________________________
+
+    void add_template(){
+        std::string name;
+        int n,state;
+        std::cout << "Enter the Template name :";
+        std::cin >> name;
+        std::cout << "Enter the no of subjects :";
+        std::cin >> n;
+        if (state == -1){
+            std::cout << "Cant Create \n";
+        }
+
+
+    }
     void delete_record(){
         int rollno;
         datafields::fields temp;
@@ -143,8 +158,42 @@ namespace interface{
 } 
 
     void modify_template(){
-        
+        std::string name;
+        int flag1,n,flag2,flag3;
+        char replace;
+        std::cout << "Enter the Template name to modify :";
+        std::cin >> name;
+        flag1 = templates::do_template_exist(name);
+        if (flag1 == -1){
+            std::cout << "Template doesnt Exist \n";
+        }
+        if (flag1 != -1){
+            std::cout << "Do you want to change Number of subjects ? (y/n) :";
+            std::cin >> replace ;
+            if (replace == 'Y' || replace == 'y' ){
+                std::cout << "Enter the number of Subjects :";
+                std::cin >> n;
+                flag2 = templates::modify_template(name,n);
+                if (flag2 == 0){
+                    std::cout << "File not opened\n";
+                }
+                else if(flag2 == 1){
+                    std::cout << "Template Modified\n";
+                }
+            }
+            else {
+                flag3 = templates::modify_template(name);
+                if (flag3 == 0){
+                    std::cout << "File not opened\n";
+                }
+                else if (flag3 == 1)
+                std::cout << "Template Modified\n";
+            }
+        }
+
     }
+    
+    // _____________________________
 
     void export_csv(){
         int state;
@@ -185,7 +234,7 @@ namespace interface{
         }while(true);
     }
 
-    
+    // ___________________________________
 
     }
 }

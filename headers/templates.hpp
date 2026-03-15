@@ -29,5 +29,7 @@ namespace templates{
     Subject * return_template_data(const std::string & template_name);
     int show_template(const std::string & template_name);
     int show_template_index();
+    int modify_template(const std::string & template_name);
+    int modify_template(const std::string& template_name, int n);
 
 }
