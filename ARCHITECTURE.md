@@ -1,4 +1,49 @@
- 
+# Interface Options
+
+## general 
+
+- Show recent records : last 5 students records
+- show all students records   
+- show all subjects records 
+- show single student record by roll
+- show single student subject record by roll
+- show session status  
+- show templates index 
+- show template data by name 
+
+- delete record 
+- delete template 
+
+- export csv all
+- export csv by course 
+
+- open record by id , rollno : in the end if any modification connect() 
+
+
+## object oriented
+
+- add student : if subject = template exist then ask to use or reenter 
+- if template course can only change obtained marks only 
+- if custom course then : add course data option , save as template option unlock
+- modify student data : 
+	- modify name
+	- modify dob
+	- modify gender 
+	- modify course
+	- modify section
+	- modify Enrollement year
+	- modify fee
+	- modify contact 
+	- modify address
+- use additional fucntions 
+
+
+
+
+
+
+
+
 # Fields 
 
 - Student ID `AUTO`

@@ -50,6 +50,7 @@ namespace recorddata{
     namespace show{
         int all_records(int flag);
         int records_by_course(const std::string & course,int flag);
+        int single_by_rollno(int rollno,int flag);
         int session_data();
     }
 
@@ -636,6 +637,83 @@ namespace recorddata{
 
 }
 namespace show{
+
+    int single_by_rollno(int rollno,int flag = 0){
+        datafields::fields data = fetch::record_by_rollno(rollno);
+        if (data.student_id == 0){
+            cout << "Record Doesnt Exist \n";
+            return 0;
+        }
+
+        if(flag == 0){
+            std::cout << "+------+----------+------------------------+--------------+----+----------+-----+-------+------+------------+--------------------------+-------------+------------------+\n";
+            std::cout << "| "
+            << std::left << std::setw(4)  << "ID"      << " | "
+            << std::left << std::setw(8)  << "Roll"    << " | "
+            << std::left << std::setw(22) << "Name"    << " | "
+            << std::left << std::setw(12) << "DOB"     << " | "
+            << std::left << std::setw(2)  << "G"       << " | "
+            << std::left << std::setw(8)  << "Course"  << " | "
+            << std::left << std::setw(3)  << "Sec"     << " | "
+            << std::left << std::setw(5)  << "Subj"    << " | "
+            << std::left << std::setw(4)  << "Year"    << " | "
+            << std::left << std::setw(10) << "Fee"     << " | "
+            << std::left << std::setw(24) << "Email"   << " | "
+            << std::left << std::setw(11) << "Phone"   << " | "
+            << std::left << std::setw(16) << "City"
+            << " |\n";
+            std::cout << "+------+----------+------------------------+--------------+----+----------+-----+-------+------+------------+--------------------------+-------------+------------------+\n";std::string dob = std::to_string(data.student_dob.day)   + "-"
+            + std::to_string(data.student_dob.month) + "-"
+            + std::to_string(data.student_dob.year);
+            std::cout << "| "
+            << std::left << std::setw(4)  << data.student_id                      << " | "
+            << std::left << std::setw(8)  << data.student_rollno                  << " | "
+            << std::left << std::setw(22) << data.student_name                    << " | "
+            << std::left << std::setw(12) << dob                                     << " | "
+            << std::left << std::setw(2)  << data.student_gender                  << " | "
+            << std::left << std::setw(8)  << data.student_course                  << " | "
+            << std::left << std::setw(3)  << data.student_section                 << " | "
+            << std::left << std::setw(5)  << data.student_number_of_subjects      << " | "
+            << std::left << std::setw(4)  << data.student_enrollement_year        << " | "
+            << std::left << std::setw(10) << data.student_pending_fee             << " | "
+            << std::left << std::setw(24) << data.student_contacts.email          << " | "
+            << std::left << std::setw(11) << data.student_contacts.phone_no       << " | "
+            << std::left << std::setw(16) << data.student_address.city
+            << " |\n";
+            std::cout << "+------+----------+------------------------+--------------+----+----------+-----+-------+------+------------+--------------------------+-------------+------------------+\n";
+            return 1;
+        }
+
+        if (flag == 1){
+        std::cout << "+------+----------+------------------------+----------+------------+--------------+---------+\n";
+        std::cout << "| "
+        << std::left << std::setw(4)  << "ID"       << " | "
+        << std::left << std::setw(8)  << "Roll"     << " | "
+        << std::left << std::setw(22) << "Subject"  << " | "
+        << std::left << std::setw(8)  << "Code"     << " | "
+        << std::left << std::setw(10) << "Total"    << " | "
+        << std::left << std::setw(12) << "Obtained" << " | "
+        << std::left << std::setw(7)  << "Credits"
+        << " |\n";
+        std::cout << "+------+----------+------------------------+----------+------------+--------------+---------+\n";
+        for (int j = 0; j < data.student_number_of_subjects; j++){
+            std::cout << "| "
+            << std::left << std::setw(4)  << data.student_id                                << " | "
+            << std::left << std::setw(8)  << data.student_rollno                            << " | "
+            << std::left << std::setw(22) << data.student_subjects[j].getsubname()          << " | "
+            << std::left << std::setw(8)  << data.student_subjects[j].getsubcode()          << " | "
+            << std::left << std::setw(10) << data.student_subjects[j].getsubtotalmarks()    << " | "
+            << std::left << std::setw(12) << data.student_subjects[j].getsubobtainedmarks() << " | "
+            << std::left << std::setw(7)  << data.student_subjects[j].getsubcredits()
+            << " |\n";
+            std::cout << "+------+----------+------------------------+----------+------------+--------------+---------+\n";
+        }
+        std::cout << "+------+----------+------------------------+----------+------------+--------------+---------+\n";
+        return 1;
+        }
+    }
+
+
     int all_records(int flag = 0){
         datafields::fields * data = recorddata::fetch::all_record();
         int length = recorddata::record::get_length(); 
