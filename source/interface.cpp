@@ -529,7 +529,7 @@ namespace interface{
 
     void open(){
         std::string input;
-        int rollno,flag,choice,courset,num;
+        int rollno,flag,choice,courset,num,exit=0;
         datafields::fields data;
         bool tempused;
         char ch;
@@ -562,6 +562,10 @@ namespace interface{
             recorddata::record::delete_data(data);
         }
         else if (choice == 1){
+
+            do {
+
+            
             std::cout << "What you want to Modify ? \n";
             std::cout << "1 -> Modify Name \n";
             std::cout << "2 -> Modify DOB \n";
@@ -574,6 +578,9 @@ namespace interface{
             std::cout << "9 -> Modify Phone No \n";
             std::cout << "10 -> Modify Address \n";
             std::cout << "11 -> Modify Number of Subjects \n";
+            std::cout << "12 -> Modify Subjects Details \n";
+            std::cout << "13 -> Show Record \n";
+
             std::cout << "0 -> Exit  \n";
 
             std::cout << "Enter Your Choice : ";
@@ -893,31 +900,56 @@ namespace interface{
                     data.student_number_of_subjects = num;
 
 
-                    for (int i = 0; i < data.student_number_of_subjects; i++) {
-                        std::cout << "Enter Subject " << i + 1 << " details\n";
-                        data.student_subjects[i] = templates::enter_and_return_sub();
-                    }
+                    break;
 
 
                 }
 
+                case 12:
+                {
+                    if (data.student_number_of_subjects == 0){ break;}
+                    for (int i = 0; i < data.student_number_of_subjects; i++) {
+                        std::cout << "Enter Subject " << i + 1 << " details\n";
+                        data.student_subjects[i] = templates::enter_and_return_sub();
+                    }
+                    
+                    break;
+                }
+                
+                case 0:
+                {
+                    std::cout << "Exit \n";
+                    exit = 1;
+                    break;
+                }
+
+                case 13:
+                {
+                    recorddata::show::single_by_rollno(rollno,0);
+                    recorddata::show::single_by_rollno(rollno,1);   
+                    break;
+                }
+                
+                default :
+                {
+                    std::cout << "Not a Valid Option \n";
+                    break;
+                }
+
+            } // switch 
+
+            } while (!exit); // do while
+
+        } // esle if 
 
 
 
 
+    } // open()
+
+        } // objectt namespace
+    
+    } // interface namesapce 
 
 
-
-                std::cout << "Enter the number of Subjects";
-
-            }
-
-        }
-
-
-
-
-    }
-
-        }
-    }
+    
