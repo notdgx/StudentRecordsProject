@@ -1,19 +1,19 @@
 #include "../headers/students.hpp"
 
-int Students::student_rollno_A = 1;
-int Students::student_id_A = 1000;
+// int Students::student_rollno_A = 1;
+// int Students::student_id_A = 1000;
 
 Students::Students() {}
 
-void Students::generate_rollno()
-{
-}
+// void Students::generate_rollno()
+// {
+// }
 
-void Students::generate_student_id()
-{
-    data.student_id = student_id_A;
-    student_id_A++;
-}
+// void Students::generate_student_id()
+// {
+//     data.student_id = student_id_A;
+//     student_id_A++;
+// }
 
 // ______________________________
 // SETTERss

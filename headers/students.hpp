@@ -11,8 +11,8 @@
 class Students {
 
 private:
-    static int student_rollno_A;
-    static int student_id_A;
+    // static int student_rollno_A;
+    // static int student_id_A;
 
     datafields::fields data{};
 

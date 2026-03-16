@@ -6,8 +6,8 @@
 #include <iomanip>
 #include "../headers/fields.hpp"
 
-int student_id_A;
-int rollno_assigner_initial;
+extern int  student_id_A;
+extern int rollno_assigner_initial;
 
 namespace recorddata{
 
