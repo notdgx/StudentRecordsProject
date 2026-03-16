@@ -523,9 +523,400 @@ namespace interface{
         }
     }
 
+    // OPEN ________________________________________
+
+
 
     void open(){
+        std::string input;
+        int rollno,flag,choice,courset,num;
+        datafields::fields data;
+        bool tempused;
+        char ch;
+
+        do{
+        std::cout << "Enter the Student Roll no : ";
+        std::cin >> rollno ;
+        data = recorddata::fetch::record_by_rollno(rollno);
+        if (data.student_id == 0){
+            std::cout<< "The Record Doesnt Exists \n";
+        }
+        else{
+            
+            std::cout<< "Record Opened \n";
+            break;
+        }
+    } while(true);
+    
+        recorddata::show::single_by_rollno(rollno,0);
+        recorddata::show::single_by_rollno(rollno,1);
         
+        std::cout << "What you want to do ? \n";
+        std::cout << "1 -> Modify Record \n";
+        std::cout << "2 -> Delete Record \n";
+        std::cout << "Enter Your Choice : ";
+        std::cin >> choice ;
+        
+        if (choice == 2 ){
+            std::cout << "Record Deleted \n";
+            recorddata::record::delete_data(data);
+        }
+        else if (choice == 1){
+            std::cout << "What you want to Modify ? \n";
+            std::cout << "1 -> Modify Name \n";
+            std::cout << "2 -> Modify DOB \n";
+            std::cout << "3 -> Modify Gender \n";
+            std::cout << "4 -> Modify Course \n";
+            std::cout << "5 -> Modify Section \n";
+            std::cout << "6 -> Modify Enrollement Year\n";
+            std::cout << "7 -> Modify Fee \n";
+            std::cout << "8 -> Modify Email \n";
+            std::cout << "9 -> Modify Phone No \n";
+            std::cout << "10 -> Modify Address \n";
+            std::cout << "11 -> Modify Number of Subjects \n";
+            std::cout << "0 -> Exit  \n";
+
+            std::cout << "Enter Your Choice : ";
+            std::cin >> choice ;
+
+            switch (choice){
+                case 1:
+                {
+                        do {
+                            std::cout << "Enter Student Name : ";
+                            std::cin.ignore();
+                            std::getline(std::cin, input);
+                            flag = validations::validate_name(input, sizeof(data.student_name));
+                            if      (flag == -1) std::cout << "Name too long\n";
+                            else if (flag ==  0) std::cout << "Not a Valid Name\n";
+                        } while (flag != 1);
+
+                        strcpy(data.student_name, input.c_str());
+
+                        break;
+                
+                    }
+
+
+                case 2:
+                {
+                        int day, month, year;
+                        do {
+
+                            std::cout << "Enter Student DOB  : \n";
+                            std::cout << "Enter Day : ";
+                            std::cin >> day;
+                            std::cout << "Enter Month : ";
+                            std::cin >> month;
+                            std::cout << "Enter Year : ";
+                            std::cin >> year;
+                            flag = validations::validate_dob(day, month, year);
+                            if (flag != 1) std::cout << "Enter a valid DOB \n";
+
+                        } while (flag != 1);
+
+                        data.student_dob = {day, month, year};
+
+                        break;
+
+                    }
+
+
+                case 3:
+                {
+                        do {
+                            std::cout << "Enter Gender (M/F) : ";
+                            std::cin >> ch;
+                            flag = validations::validate_gender(ch);
+                            if (flag != 1) std::cout << "Enter a valid Gender \n";
+                        } while (flag != 1);
+
+                        data.student_gender = ch;
+
+
+                        break;
+                    }
+
+
+                case 4:
+                {
+                        do{
+
+                            do {
+                                std::cout << "Enter Course : ";
+                                std::cin.ignore();
+                                std::getline(std::cin, input);
+                                flag = validations::validate_course(input, sizeof(data.student_course));
+                                if (flag == -1) std::cout << "Course name too long\n";
+                                else if (flag ==  0) std::cout << "Enter a valid Course Name\n";
+                                
+                            } while (flag != 1);
+                            
+                            if (templates::do_template_exist(input) == -1){
+                                strcpy(data.student_course, input.c_str());
+                                for (int i = 0; i < data.student_number_of_subjects; i++) {
+                                        data.student_subjects[i] = {};
+                                    }
+                                data.student_number_of_subjects = 0;
+                                courset = true;
+                                
+                            }
+                            else {
+                                std::cout << "Course Exist in Template , Do you want to use template ? (y/n) ";
+                                std::cin >> ch ;
+                                if (ch == 'y' || ch =='Y'){
+                                    tempused = 1;
+                                    strcpy(data.student_course, input.c_str());
+                                    num = templates::give_number_of_subjects(input);
+                                    for (int i = 0; i < data.student_number_of_subjects; i++) {
+                                        data.student_subjects[i] = {};
+                                    }
+                                    data.student_number_of_subjects = num ;
+                                    Subject * subs = templates::return_template_data(input);
+                                        for (int i = 0; i < num; i++) {
+                                            data.student_subjects[i] = subs[i];
+                                        }
+                                        courset = true;
+                                    
+                                }
+                                else {
+                                    std::cout << "Enter a different course name : \n";
+                                }
+
+                            }
+
+                            }while(!courset) ;
+
+                            break;
+                        }
+
+
+                case 5:
+                {
+                        do {
+                            std::cout << "Enter Section (A-Z) : ";
+                            std::cin >> ch;
+
+                            flag = validations::validate_section(ch);
+                            if (flag != 1) {
+                                std::cout << "Section must be A-Z\n";
+                            }
+
+                        } while (flag != 1);
+                        data.student_section = ch;
+
+                        break;
+
+                    }
+
+
+                case 6:
+                {
+                        do {
+                            std::cout << "Enter Enrollment Year : ";
+                            std::cin >> num;
+                            flag = validations::validate_enrollement_year(num);
+                            if (flag != 1) {
+                                std::cout << "Invalid year\n";
+                            }
+
+                        } while (flag != 1);
+
+                        data.student_enrollement_year = num;
+
+                        break;
+
+                    }
+
+                case 7 :
+                {
+                
+                        do {
+                            std::cout << "Enter Pending Fee : ";
+                            std::cin >> num;
+                            flag = validations::validae_pending_fee(num);
+                            if (flag != 1) {
+                                std::cout << "Fee cannot be negative\n";
+                            }
+
+                        } while (flag != 1);
+                        data.student_pending_fee = num;
+
+                        break;
+
+                    }
+
+
+                case 8: 
+                {
+                        do {
+                            std::cout << "Enter Student 's Email : ";
+                            std::cin >> input;
+                            flag = validations::validate_email(input, sizeof(data.student_contacts.email));
+                            if (flag == -1) {
+                                std::cout << "Email too long \n";
+                            }
+                            else if (flag ==  0) {
+                                std::cout << "Invalid email format\n";
+                            }
+
+                        } while (flag != 1);
+                        strcpy(data.student_contacts.email, input.c_str());
+
+                        break;
+                    }
+
+
+                case 9:
+                {
+                        do {
+                            std::cout << "Enter Phone No (10 digits) : ";
+                            std::cin >> input;
+
+                            flag = validations::validate_phone_no(input);
+                            if (flag == -1){
+                                std::cout << "Must be exactly 10 digits\n";
+                            }
+                            else if (flag ==  0) {
+                                std::cout << "Only digits allowed\n";
+                            }
+
+                        } while (flag != 1);
+                        strcpy(data.student_contacts.phone_no, input.c_str());
+
+                        break;
+
+                    }
+
+
+                case 10:
+                {
+                    std::string house, street, city, state, country, pincode;
+
+                    std::cout<<"Enter the Address Details : \n";
+                    do {
+                        std::cout << "Enter House : ";
+                        std::cin.ignore();
+                        std::getline(std::cin, house);
+                        flag = validations::validate_address_field(house, sizeof(data.student_address.house));
+                        if (flag == -1) {
+                            std::cout << "Too long \n";
+                        }
+                        else if (flag ==  0) {
+                            std::cout << "invalid Format \n";
+                        }
+                    } while (flag != 1);
+
+                    do {
+                        std::cout << "Enter Street : ";
+                        std::getline(std::cin, street);
+                        flag = validations::validate_address_field(street, sizeof(data.student_address.street));
+                        if (flag == -1) {
+                            std::cout << "Too long\n";
+                        }
+                        else if (flag ==  0) {
+                            std::cout << "Invalid Format \n";
+                        }
+                    } while (flag != 1);
+
+                    do {
+                        std::cout << "Enter City : ";
+                        std::getline(std::cin, city);
+                        flag = validations::validate_address_field(city, sizeof(data.student_address.city));
+                        if (flag == -1) {
+                            std::cout << "Too long \n";
+                        }
+                        else if (flag ==  0) {
+                            std::cout << "Invalid Format  \n";
+                        }
+                    } while (flag != 1);
+
+                    do {
+                        std::cout << "Enter State : ";
+                        std::getline(std::cin, state);
+                        flag = validations::validate_address_field(state, sizeof(data.student_address.state));
+                        if (flag == -1) {
+                            std::cout << "Too long\n";
+                        }
+                        else if (flag ==  0) {
+                            std::cout << "Invalid format \n";
+                        }
+                    } while (flag != 1);
+
+                    do {
+                        std::cout << "Enter Country : ";
+                        std::getline(std::cin, country);
+                        flag = validations::validate_address_field(country, sizeof(data.student_address.country));
+                        if(flag == -1) {
+                            std::cout << "Too long\n";
+                        }
+                        else if (flag ==  0) {
+                            std::cout << "Invalid format \n";
+                        }
+                    } while (flag != 1);
+
+                    do {
+                        std::cout << "Enter Pincode (6 digits) : ";
+                        std::cin >> pincode;
+                        flag = validations::validate_address_pincode(pincode);
+                        if (flag == -1) {
+                            std::cout << "Must be exactly 6 digits\n";
+                        }
+                        else if (flag ==  0) {
+                            std::cout << "Only digits are allowed\n";
+                        }
+                    } while (flag != 1);
+
+                    strcpy(data.student_address.house,   house.c_str());
+                    strcpy(data.student_address.street,  street.c_str());
+                    strcpy(data.student_address.city,    city.c_str());
+                    strcpy(data.student_address.state,   state.c_str());
+                    strcpy(data.student_address.country, country.c_str());
+                    strcpy(data.student_address.pincode, pincode.c_str());
+
+                    break ; 
+                }
+
+
+                case 11:
+                {
+                    if (templates::do_template_exist(data.student_course) != -1 || tempused == 1){
+                        std::cout << "Cant change Subjects as it is a template \n";
+                        break;
+                    }
+                    do {
+                        std::cout << "Enter Number of Subjects (1-10) : ";
+                        std::cin >> num;
+                        flag = validations::validate_number_of_subjects(num);
+                        if (flag != 1) std::cout << "Must be between 1 and 10\n";
+                    } while (flag != 1);
+                    data.student_number_of_subjects = num;
+
+
+                    for (int i = 0; i < data.student_number_of_subjects; i++) {
+                        std::cout << "Enter Subject " << i + 1 << " details\n";
+                        data.student_subjects[i] = templates::enter_and_return_sub();
+                    }
+
+
+                }
+
+
+
+
+
+
+
+
+                std::cout << "Enter the number of Subjects";
+
+            }
+
+        }
+
+
+
+
     }
 
         }
