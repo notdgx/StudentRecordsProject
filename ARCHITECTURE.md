@@ -1,31 +1,3 @@
-# Errors 
-
-dx Students ▸ g++ source/*.cpp -I headers/ -o run 
-source/datafile.cpp: In function ‘int recorddata::show::single_by_rollno(int, int)’:
-source/datafile.cpp:717:5: warning: control reaches end of non-void function [-Wreturn-type]
-  717 |     }
-      |     ^
-source/templates.cpp: In function ‘std::ofstream templates::file_exists_check(const string&, int)’:
-source/templates.cpp:163:5: warning: control reaches end of non-void function [-Wreturn-type]
-  163 |     }
-      |     ^
-source/templates.cpp: In function ‘Subject* templates::return_template_data(const string&)’:
-source/templates.cpp:190:5: warning: control reaches end of non-void function [-Wreturn-type]
-  190 |     }
-      |     ^
-/usr/bin/ld: /tmp/ccXGjNLh.o: warning: relocation against `student_id_A' in read-only section `.text'
-/usr/bin/ld: /tmp/ccPSVtUK.o: in function `recorddata::session::init_rollno_for_new_course()':
-datafile.cpp:(.text+0x5b5a): undefined reference to `recorddata::rollno_assigner'
-/usr/bin/ld: /tmp/ccPSVtUK.o: in function `recorddata::session::init_session()':
-datafile.cpp:(.text+0x5c60): undefined reference to `student_id_A'
-/usr/bin/ld: datafile.cpp:(.text+0x5c7e): undefined reference to `rollno_assigner_initial'
-/usr/bin/ld: /tmp/ccXGjNLh.o: in function `main':
-main.cpp:(.text+0x1e): undefined reference to `student_id_A'
-/usr/bin/ld: main.cpp:(.text+0x28): undefined reference to `rollno_assigner_initial'
-/usr/bin/ld: main.cpp:(.text+0x32): undefined reference to `recorddata::rollno_assigner'
-/usr/bin/ld: warning: creating DT_TEXTREL in a PIE
-collect2: error: ld returned 1 exit status
-
 
 # Interface Options
 

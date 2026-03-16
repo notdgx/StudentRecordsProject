@@ -374,8 +374,8 @@ namespace recorddata{
 
 
     int export_csv_by_course(const std::string & course){
-        std::string studentpath =  "../export/" + course + "_students.csv";
-        std::string subjectpath =  "../export/" + course + "_subjects.csv";
+        std::string studentpath =  "export/" + course + "_students.csv";
+        std::string subjectpath =  "export/" + course + "_subjects.csv";
         std::string studentscolumn ,subjectscolumn ;
         datafields::fields * data = records_by_course(course);
         if (data == nullptr){
@@ -436,8 +436,8 @@ namespace recorddata{
         
         int count = record::get_length();
         
-        fstream studentexportfile("../export/all_students.csv", ios::out );
-        fstream subjectexportfile("../export/all_subjects.csv", ios::out );
+        ofstream studentexportfile("export/all_students.csv", ios::out );
+        ofstream subjectexportfile("export/all_subjects.csv", ios::out );
         if (!studentexportfile.is_open()|| !subjectexportfile.is_open()){
             return 0;
         }

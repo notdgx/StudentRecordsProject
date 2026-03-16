@@ -77,15 +77,10 @@ namespace interface{
     
     void show_template_index(){
         int state;
-        do{
         state = templates::show_template_index();
         if (state == 0){
             std::cout << "Template Index Doesnt Exist \n";
         }
-        else if (state == 1){
-            break;
-        }
-        }while(true);
         
     }
     
@@ -115,8 +110,12 @@ namespace interface{
         std::cin >> name;
         std::cout << "Enter the no of subjects :";
         std::cin >> n;
+        state = templates::create_template(name,n);
         if (state == -1){
             std::cout << "Cant Create \n";
+        }
+        else if (state ==  1){
+            std::cout << "Template Created \n";
         }
 
 
