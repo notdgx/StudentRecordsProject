@@ -6,14 +6,14 @@
 // #include <fstream>
 // #include <iomanip>
 
-// int student_id_A = 1;   
-// int rollno_assigner_initial = 1000;
+int student_id_A = 1;   
+int rollno_assigner_initial = 1000;
 
 namespace recorddata{
 
-    std::string session_file_path = "../files/session_data";
-    std::string record_file_path = "../files/record";
-    // int rollno_assigner = 1000;
+    std::string session_file_path = "files/session_data";
+    std::string record_file_path = "files/record";
+    int rollno_assigner = 1000;
 
     namespace session{
         int add_data(const std::string & course);
@@ -714,6 +714,8 @@ namespace show{
         std::cout << "+------+----------+------------------------+----------+------------+--------------+---------+\n";
         return 1;
         }
+
+        return 0;
     }
 
 

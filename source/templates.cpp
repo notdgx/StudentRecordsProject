@@ -41,7 +41,7 @@ namespace templates{
         char replace;
         int index,n;
         index = templates::do_template_exist(template_name);
-        string path = "../templates/" + template_name + ".template";
+        string path = "templates/" + template_name + ".template";
         ifstream file(path,ios::in | ios::binary);
         if (!file.is_open() || index == -1){
             return 0;
@@ -68,7 +68,7 @@ namespace templates{
         char replace;
         int index;
         index = templates::do_template_exist(template_name);
-        string path = "../templates/" + template_name + ".template";
+        string path = "templates/" + template_name + ".template";
         ifstream file(path,ios::in | ios::binary);
         if (!file.is_open() || index == -1){
             return 0;
@@ -97,7 +97,7 @@ namespace templates{
     // DELETEING TEMPLATE 
 
     void delete_template(const std::string & template_name){
-        string path = "../templates/" + template_name + ".template";
+        string path = "templates/" + template_name + ".template";
         ifstream file(path);
         char choice;
         if (file.is_open()){
@@ -119,7 +119,7 @@ namespace templates{
     // adding in index will active when no of subjects pssed
     {
         char replace;
-        string path = "../templates/" + file_name + ".template";
+        string path = "templates/" + file_name + ".template";
         // char replaceT;
         string template_name;
         ofstream file1;
@@ -160,12 +160,14 @@ namespace templates{
                 return file1;
             }
         }
+
+        return file1;
     }
 
     // Return Tempalte for use
 
     Subject * return_template_data(const std::string & template_name){
-        string path = "../templates/" + template_name + ".template";
+        string path = "templates/" + template_name + ".template";
         fstream file(path , ios::binary | ios::in);
         templateindex indexdata;
         int exist = do_template_exist(template_name);
@@ -186,6 +188,7 @@ namespace templates{
             return nullptr;
         }
 
+        return nullptr;
 
     }
 
@@ -269,7 +272,7 @@ namespace templates{
     int show_template_index(){
         int size ;
         templates::templateindex data;
-        ifstream file("../templates/00_templateindex", ios::binary);
+        ifstream file("templates/00_templateindex", ios::binary);
 
         if (!file.is_open()){
             return 0;
@@ -316,7 +319,7 @@ namespace templates{
         strcpy(data.template_name_in_index,template_name.c_str());
         data.template_N_in_index = number_of_subjects;
 
-        ofstream file("../templates/00_templateindex" , ios::binary | ios::app );
+        ofstream file("templates/00_templateindex" , ios::binary | ios::app );
         if (do_template_exist(template_name) == -1){
             file.write(reinterpret_cast<char *>(&data),sizeof(data));
         }
@@ -326,7 +329,7 @@ namespace templates{
 
     int do_template_exist(const std::string & template_name){
 
-        ifstream file("../templates/00_templateindex", ios::binary);
+        ifstream file("templates/00_templateindex", ios::binary);
         templates::templateindex T ;
         int index=0;
 
@@ -347,7 +350,7 @@ namespace templates{
         strcpy(data.template_name_in_index , template_name.c_str());
         data.template_N_in_index = number_of_subjects;
 
-        fstream file("../templates/00_templateindex" , ios::binary | ios::in | ios::out );
+        fstream file("templates/00_templateindex" , ios::binary | ios::in | ios::out );
         file.seekp(index , ios::beg);
         file.write(reinterpret_cast<char *>(&data), sizeof(data));
         file.close();
@@ -358,7 +361,7 @@ namespace templates{
 
         templates::templateindex delete_index{};
 
-        fstream file("../templates/00_templateindex" , ios::binary | ios::in | ios::out );
+        fstream file("templates/00_templateindex" , ios::binary | ios::in | ios::out );
         if (index == -1){
             return;
         }
@@ -369,7 +372,7 @@ namespace templates{
     }
 
     templateindex give_template_data_at_index(int index){
-        ifstream file("../templates/00_templateindex" , ios::binary);
+        ifstream file("templates/00_templateindex" , ios::binary);
         templateindex data;
         file.seekg(index , ios::beg);
         file.read(reinterpret_cast<char *>(&data), sizeof(data));
@@ -404,7 +407,7 @@ namespace templates{
 //     // }  // templates::delete_template("fdddf");
 
 //     templates::show_template("BCA2ndSem");
-    // templates::delete_template("fdd" );
+//     templates::delete_template("fdd" );
     
 // }
 

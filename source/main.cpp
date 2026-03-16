@@ -13,9 +13,10 @@ int main(){
 
     // globla variables or inits 
     
-    student_id_A = 1;
-    rollno_assigner_initial = 1000;
-    recorddata::rollno_assigner = 1000;
+    // int student_id_A = 1;
+    // int rollno_assigner_initial = 1000;
+    // int recorddata::rollno_assigner = 1000;
+    recorddata::init_files();
 
     // Variables
 
