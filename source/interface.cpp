@@ -720,7 +720,8 @@ namespace interface{
             std::cout << "12 -> Modify Subjects Details \n";
             std::cout << "13 -> Show Record \n";
 
-            std::cout << "0 -> Exit  \n";
+            std::cout << "0 -> Save & Exit  \n";
+            std::cout << "14 -> Dont Save & Exit  \n";
 
             do{
             std::cout << "Enter Your Choice : ";
@@ -1103,18 +1104,26 @@ namespace interface{
                 
                 case 0:
                 {
-                    std::cout << "Exit \n";
+                    std::cout << "Saved \n";
+                    recorddata::connect(data);
+                    exit = 1;
+                    break;
+                }
+                
+                case 13: //show
+                {
+                    recorddata::show::single_by_rollno(data,0);
+                    recorddata::show::single_by_rollno(data,1);   
+                    break;
+                }
+                
+                case 14:
+                {
+                    std::cout << "Data not Saved\n";
                     exit = 1;
                     break;
                 }
 
-                case 13:
-                {
-                    recorddata::show::single_by_rollno(rollno,0);
-                    recorddata::show::single_by_rollno(rollno,1);   
-                    break;
-                }
-                
                 default :
                 {
                     std::cout << "Not a Valid Option \n";

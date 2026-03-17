@@ -54,6 +54,7 @@ namespace recorddata{
         int records_by_course(const std::string & course,int flag);
         int single_by_rollno(int rollno,int flag);
         int session_data();
+        int single_by_rollno(datafields::fields data,int flag);
     }
 
     int init_files();
