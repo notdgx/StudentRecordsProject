@@ -25,6 +25,7 @@ namespace templates{
             std::cout << "Enter the Subject " << i+1 << " Details : \n" ;
             std::cout << "-----------------------------\n\n" ;
             Subject sub = templates::enter_and_return_sub();
+            cin.ignore(1000,'\n');
             file.write(reinterpret_cast<char*>(& sub),sizeof(sub));
             std::cout << "-----------------------------\n\n" ;
             
@@ -423,29 +424,33 @@ namespace templates{
 
 };
 
-// int main(){
-//     templates::create_template("BCA2ndSem" ,5);
-//     // templates::add_template_index("fdd",34);
-//     templates::add_template_index("HHhfdd",834);
-//     templates::add_template_index("AAAfdd",345);
-//     templates::add_template_index("AAAfdd",345);
+int main(){
+// //     templates::create_template("BCA2ndSem" ,5);
+// //     // templates::add_template_index("fdd",34);
+// //     templates::add_template_index("HHhfdd",834);
+// //     templates::add_template_index("AAAfdd",345);
+// //     templates::add_template_index("AAAfdd",345);
+// //     templates::show_template_index();
+// //     templates::replace_template_index("OOO", 89, 48);
+// //     templates::show_template_index();
+// //     // templates::delete_template_index(24);
 //     templates::show_template_index();
-//     templates::replace_template_index("OOO", 89, 48);
-//     templates::show_template_index();
-//     // templates::delete_template_index(24);
-//     // templates::show_template_index();
-//     // cout<<templates::do_template_exist("HHhfdd");
-//     // Subject * str = templates::return_template_data("fdddf");  
-//     // for (int i = 0 ; i< templates::give_number_of_subjects("fdddf"); i++ ) {
-//     //     cout<<str[i].getsubcode()<<endl;
-//     //     cout<<str[i].getsubcredits()<<endl;
-//     //     cout<<str[i].getsubname()<<endl;
-//     //     cout<<str[i].getsubobtainedmarks()<<endl;
-//     //     cout<<str[i].getsubtotalmarks()<<endl;
-//     // }  // templates::delete_template("fdddf");
+// //     // cout<<templates::do_template_exist("HHhfdd");
+// //     // Subject * str = templates::return_template_data("fdddf");  
+// //     // for (int i = 0 ; i< templates::give_number_of_subjects("fdddf"); i++ ) {
+// //     //     cout<<str[i].getsubcode()<<endl;
+// //     //     cout<<str[i].getsubcredits()<<endl;
+// //     //     cout<<str[i].getsubname()<<endl;
+// //     //     cout<<str[i].getsubobtainedmarks()<<endl;
+// //     //     cout<<str[i].getsubtotalmarks()<<endl;
+// //     // }  // templates::delete_template("fdddf");
 
-//     templates::show_template("BCA2ndSem");
-//     templates::delete_template("fdd" );
+// templates::create_template("aaa",2);
+//     templates::show_template("aaa");
+// templates::create_template("paa",2);
+//     templates::show_template("paa");
+
+// //     templates::delete_template("fdd" );
     
-// }
+}
 

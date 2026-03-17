@@ -709,6 +709,17 @@ namespace show{
             << std::left << std::setw(16) << data.student_address.city
             << " |\n";
             std::cout << "+------+----------+------------------------+--------------+----+----------+-----+-------+------+------------+--------------------------+-------------+------------------+\n";
+                    std::cout << "\n"<< "+----------------------+---------------------+------------------+-------------------+----------------------+---------------------+" << std::endl;
+                    std::cout << "|        house         |       street        |       city       |       state       |       country        |       pincode       |" << std::endl;
+                    std::cout << "+----------------------+---------------------+------------------+-------------------+----------------------+---------------------+" << std::endl;
+                    std::cout << "| " << std::setw(21) << std::left << data.student_address.house
+                            << "| " << std::setw(20) << std::left << data.student_address.street
+                            << "| " << std::setw(17) << std::left << data.student_address.city
+                            << "| " << std::setw(18) << std::left << data.student_address.state
+                            << "| " << std::setw(21) << std::left << data.student_address.country
+                            << "| " << std::setw(20) << std::left << data.student_address.pincode
+                            << "|" << std::endl;
+                    std::cout << "+----------------------+---------------------+------------------+-------------------+----------------------+---------------------+" << std::endl;
             return 1;
         }
 

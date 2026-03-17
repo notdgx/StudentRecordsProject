@@ -154,6 +154,7 @@ namespace interface{
 
         }while (true);
 
+        cin.ignore(1000,'\n');
         state = templates::create_template(name,n);
 
         if (state == -1){
@@ -311,6 +312,9 @@ namespace interface{
         }
         else if (state == 1){
             break;
+        }
+        else{
+            std::cout << "Data Files Exported \n";
         }
         }while(true);
     }
@@ -672,6 +676,7 @@ namespace interface{
     } while(true);
     
         recorddata::show::single_by_rollno(rollno,0);
+
         recorddata::show::single_by_rollno(rollno,1);
         
         std::cout << "What you want to do ? \n";

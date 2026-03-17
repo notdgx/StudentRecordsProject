@@ -35,10 +35,10 @@ collect2: error: ld returned 1 exit status
 - in show by roll no if not a valid roll no giving the recent record details 🟢
 - if roll no is entered as char continous loop 
 - space is exclude every where ther is cin string 🟢
-- in every tempalte no fistst subject name
-- if in delete record put the char it just loop 
-- the export by course doesnt show any message on success
-- add full address on opening a record and showing it 
+- in every tempalte no fistst subject name 🟢
+- if in delete record put the char it just loop 🟢
+- the export by course doesnt show any message on success 🟢
+- add full address on opening a record and showing it 🟢
 - on modifing record the details not saved 
 - and show record is showing the previous 
 - and if new course updated then the subject details not showing any message if n = 0
