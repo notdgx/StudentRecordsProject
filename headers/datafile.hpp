@@ -35,6 +35,7 @@ namespace recorddata{
         int get_length();
         int check_duplicate(datafields::fields & data);
         int init_record();
+        int no_of_deleted();
     }
 
     namespace fetch{

@@ -35,6 +35,7 @@ namespace recorddata{
         int get_length();
         int check_duplicate(datafields::fields & data);
         int init_record();
+        int no_of_deleted();
     }
 
     namespace fetch{
@@ -122,6 +123,25 @@ namespace recorddata{
     }
 
     namespace record{
+
+    int no_of_deleted(){
+        ifstream file(record_file_path,ios::in | ios::binary);
+        datafields::fields data;
+        int count = 0;
+        if (!file.is_open()){
+            return 0;
+        }
+
+        while (file.read(reinterpret_cast<char *>(&data),sizeof(data))){
+
+            if (data.student_id == 0){
+                count++;
+            }
+        }
+
+        return count;
+
+    }
 
     int add_data(datafields::fields & data){
         ofstream file(record_file_path , ios::binary | ios::app);
@@ -272,6 +292,7 @@ namespace recorddata{
                 return data;
             }
         }
+        data.student_id = -1;
         return data;
     }
 
@@ -646,6 +667,10 @@ namespace show{
         datafields::fields data = fetch::record_by_rollno(rollno);
         if (data.student_id == 0){
             return 0;
+        }
+
+        else if (data.student_id == -1){
+            return -1;
         }
 
         if(flag == 0){

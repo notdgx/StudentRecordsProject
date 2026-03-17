@@ -244,23 +244,61 @@ namespace templates{
 
         sub.setsubname(Esub_name);
 
+        do{
         std::cout << "Enter the Subject Code : " ;
         std::cin >> Esub_code ;
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(1000,'\n');
+                std::cout << "Enter a Number ! \n";
+                continue;
+            }
         sub.setsubcode(Esub_code);
+        break;
+        }while(true);
 
+        do{
         std::cout << "Enter the Subject Total Marks : " ;
         std::cin >> Esub_totalmarks ;
-        sub.setsubtotalmarks(Esub_totalmarks);
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(1000,'\n');
+                std::cout << "Enter a Number ! \n";
+                continue;
+            }
 
+        sub.setsubtotalmarks(Esub_totalmarks);
+        break;
+        }while(true);
+
+        do{
         std::cout << "Enter the Subject Obtained Marks : " ;
         std::cin >> Esub_obtainedmarks ;
-        sub.setsubobtainedmarks(Esub_obtainedmarks);
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(1000,'\n');
+                std::cout << "Enter a Number ! \n";
+                continue;
+            }
 
+        sub.setsubobtainedmarks(Esub_obtainedmarks);
+        break;
+        }while(true);
+
+        do{
         std::cout << "Enter the Subject Credits : " ;
         std::cin >> Esub_credits ;
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(1000,'\n');
+                std::cout << "Enter a Number ! \n";
+                continue;
+            }
         sub.setsubcredits(Esub_credits);
+        break;
+        }while(true);
 
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // .
+        // cin.ignore(numeric_limits<streamsize>::max(), '\n'); // .
 
         return sub;
     }

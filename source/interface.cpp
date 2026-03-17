@@ -38,11 +38,20 @@ namespace interface{
             do {
             std::cout << "Enter  the Roll No : ";
             std::cin >> roll ;
+            if (std::cin.fail()){
+                state = 2;
+                std::cout << "Enter a valid rollno ! \n";
+                std::cin.clear();
+                std::cin.ignore(1000,'\n');
+                continue;
+
+            }
+
             state = recorddata::show::single_by_rollno(roll,1);
             if (state == 1){
                 break;
             }
-            else if (state == 0){
+            else if (state == 0 || state == -1){
                 std::cout << "Record Doesnt Exist \n";
             }
         }while(true);
@@ -55,7 +64,18 @@ namespace interface{
         do {
             std::cout << "Enter  the Roll No : ";
             std::cin >> roll ;
+            // state = recorddata::show::single_by_rollno(roll,0);
+            if (std::cin.fail()){
+                state = 2;
+                std::cout << "Enter a valid rollno ! \n";
+                std::cin.clear();
+                std::cin.ignore(1000,'\n');
+                continue;
+            }
+
+
             state = recorddata::show::single_by_rollno(roll,0);
+
             if (state == 1){
                 break;
             }
@@ -90,7 +110,12 @@ namespace interface{
         int state;
         do{
         std::cout << "Enter the course name :";
-        std::cin >> name;
+        // std::cin >> name;
+        getline(cin,name);
+        if (name.length() > 19){
+            std::cout << "Too Long";
+            continue;
+        }
         state = templates::show_template(name);
         if (state == 0){
             std::cout << "Template Doesnt Exist \n";
@@ -106,11 +131,31 @@ namespace interface{
     void add_template(){
         std::string name;
         int n,state;
+        do {
         std::cout << "Enter the Template name :";
-        std::cin >> name;
-        std::cout << "Enter the no of subjects :";
+        std::getline(cin,name);
+        if (name.length() > 19){
+            std::cout << "Template name too long \n";
+            continue;
+        }
+        break;
+        } while(true);
+
+        do {
+        std::cout << "Enter the no of subjects  :";
         std::cin >> n;
+        if (std::cin.fail() || n > 10){
+                state = 2;
+                std::cout << "Enter valid number of Subjects ! \n";
+                std::cin.clear();
+                std::cin.ignore(1000,'\n');
+        }
+        break;
+
+        }while (true);
+
         state = templates::create_template(name,n);
+
         if (state == -1){
             std::cout << "Cant Create \n";
         }
@@ -127,8 +172,17 @@ namespace interface{
         do{
         std::cout << "Enter the Roll No :";
         std::cin >> rollno;
+            if (std::cin.fail()){
+                std::cout << "Enter a valid rollno ! \n";
+                std::cin.clear();
+                std::cin.ignore(1000,'\n');
+                continue;
+            }
+
+
         temp = recorddata::fetch::record_by_rollno(rollno);
-        if (temp.student_id == 0){
+
+        if (temp.student_id == 0 ){
             std::cout << "Record Doesnt Exist \n";
         }
         else {
@@ -144,7 +198,11 @@ namespace interface{
         int state;
         do{
         std::cout << "Enter the Template name :";
-        std::cin >> name;
+        std::getline(cin,name);
+        if (name.length() > 19){
+            std::cout << "Template name too long \n";
+            continue;
+        }
         state = templates::do_template_exist(name);
         if (state == -1){
             std::cout << "Template Doesnt Exist \n";
@@ -160,18 +218,38 @@ namespace interface{
         std::string name;
         int flag1,n,flag2,flag3;
         char replace;
+        do{
         std::cout << "Enter the Template name to modify :";
         std::cin >> name;
+        std::getline(cin,name);
+        if (name.length() > 19){
+            std::cout << "Template name too long \n";
+            continue;
+        }
+        break;  
+        }while(true);
+    
         flag1 = templates::do_template_exist(name);
         if (flag1 == -1){
             std::cout << "Template doesnt Exist \n";
         }
+
         if (flag1 != -1){
             std::cout << "Do you want to change Number of subjects ? (y/n) :";
             std::cin >> replace ;
             if (replace == 'Y' || replace == 'y' ){
-                std::cout << "Enter the number of Subjects :";
-                std::cin >> n;
+
+                do {
+                    std::cout << "Enter the number of Subjects :";
+                    std::cin >> n;
+                    if (cin.fail()){
+                        std::cout << "Enter valid number \n";
+                        cin.clear();
+                        cin.ignore(1000,'\n');
+                    }
+                    break;
+                }while(true);
+                
                 flag2 = templates::modify_template(name,n);
                 if (flag2 == 0){
                     std::cout << "File not opened\n";
@@ -216,7 +294,11 @@ namespace interface{
         int state;
         do{
         std::cout << "Enter the Course name :";
-        std::cin >> name;
+        std::getline(cin,name);
+        if (name.length() > 19){
+            std::cout << "Course name Too Long\n";
+            continue;
+        }
         state = recorddata::fetch::export_csv_by_course(name);
         if (state == -1){
             std::cout << "Cant Fetch Data \n";
@@ -269,13 +351,31 @@ namespace interface{
         int day, month, year;
         do {
 
-            std::cout << "Enter Student DOB  : \n";
+            std::cout << "Enter Student DOB  -> \n";
             std::cout << "Enter Day : ";
             std::cin >> day;
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(1000,'\n');
+                std::cout << "Enter a Number ! \n";
+                continue;
+            }
             std::cout << "Enter Month : ";
             std::cin >> month;
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(1000,'\n');
+                std::cout << "Enter a Number ! \n";
+                continue;
+            }
             std::cout << "Enter Year : ";
             std::cin >> year;
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(1000,'\n');
+                std::cout << "Enter a Number ! \n";
+                continue;
+            }
             flag = validations::validate_dob(day, month, year);
             if (flag != 1) std::cout << "Enter a valid DOB \n";
 
@@ -354,8 +454,14 @@ namespace interface{
         if (tempused != 1){
 
         do {
-            std::cout << "Enter Number of Subjects (1-10) : ";
+            std::cout << "Enter Number of Subjects : ";
             std::cin >> num;
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(1000,'\n');
+                std::cout << "Enter a Number ! \n";
+                continue;
+            }
             flag = validations::validate_number_of_subjects(num);
             if (flag != 1) std::cout << "Must be between 1 and 10\n";
         } while (flag != 1);
@@ -376,6 +482,12 @@ namespace interface{
         do {
             std::cout << "Enter Enrollment Year : ";
             std::cin >> num;
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(1000,'\n');
+                std::cout << "Enter a Number ! \n";
+                continue;
+            }
             flag = validations::validate_enrollement_year(num);
             if (flag != 1) {
                 std::cout << "Invalid year\n";
@@ -389,6 +501,12 @@ namespace interface{
         do {
             std::cout << "Enter Pending Fee : ";
             std::cin >> num;
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(1000,'\n');
+                std::cout << "Enter a Number ! \n";
+                continue;
+            }
             flag = validations::validae_pending_fee(num);
             if (flag != 1) {
                 std::cout << "Fee cannot be negative\n";
@@ -536,6 +654,12 @@ namespace interface{
         do{
         std::cout << "Enter the Student Roll no : ";
         std::cin >> rollno ;
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(1000,'\n');
+                std::cout << "Enter a Number ! \n";
+                continue;
+            }
         data = recorddata::fetch::record_by_rollno(rollno);
         if (data.student_id == 0){
             std::cout<< "The Record Doesnt Exists \n";
@@ -553,8 +677,19 @@ namespace interface{
         std::cout << "What you want to do ? \n";
         std::cout << "1 -> Modify Record \n";
         std::cout << "2 -> Delete Record \n";
+
+        do {
         std::cout << "Enter Your Choice : ";
         std::cin >> choice ;
+            if (cin.fail()){
+                cin.clear();
+                cin.ignore(1000,'\n');
+                std::cout << "Enter a Number ! \n";
+                continue;
+            }
+            break;
+
+        }while(true);
         
         if (choice == 2 ){
             std::cout << "Record Deleted \n";
@@ -582,8 +717,18 @@ namespace interface{
 
             std::cout << "0 -> Exit  \n";
 
+            do{
             std::cout << "Enter Your Choice : ";
             std::cin >> choice ;
+                if (cin.fail()){
+                    cin.clear();
+                    cin.ignore(1000,'\n');
+                    std::cout << "Enter a Number ! \n";
+                    continue;
+                }
+            break;
+            }while(true);
+
 
             switch (choice){
                 case 1:
@@ -612,10 +757,28 @@ namespace interface{
                             std::cout << "Enter Student DOB  : \n";
                             std::cout << "Enter Day : ";
                             std::cin >> day;
+                            if (cin.fail()){
+                                cin.clear();
+                                cin.ignore(1000,'\n');
+                                std::cout << "Enter a Number ! \n";
+                                continue;
+                            }
                             std::cout << "Enter Month : ";
                             std::cin >> month;
+                            if (cin.fail()){
+                                cin.clear();
+                                cin.ignore(1000,'\n');
+                                std::cout << "Enter a Number ! \n";
+                                continue;
+                            }
                             std::cout << "Enter Year : ";
                             std::cin >> year;
+                            if (cin.fail()){
+                                cin.clear();
+                                cin.ignore(1000,'\n');
+                                std::cout << "Enter a Number ! \n";
+                                continue;
+                            }
                             flag = validations::validate_dob(day, month, year);
                             if (flag != 1) std::cout << "Enter a valid DOB \n";
 
@@ -721,6 +884,12 @@ namespace interface{
                         do {
                             std::cout << "Enter Enrollment Year : ";
                             std::cin >> num;
+                            if (cin.fail()){
+                                cin.clear();
+                                cin.ignore(1000,'\n');
+                                std::cout << "Enter a Number ! \n";
+                                continue;
+                            }
                             flag = validations::validate_enrollement_year(num);
                             if (flag != 1) {
                                 std::cout << "Invalid year\n";
@@ -740,6 +909,12 @@ namespace interface{
                         do {
                             std::cout << "Enter Pending Fee : ";
                             std::cin >> num;
+                            if (cin.fail()){
+                                cin.clear();
+                                cin.ignore(1000,'\n');
+                                std::cout << "Enter a Number ! \n";
+                                continue;
+                            }
                             flag = validations::validae_pending_fee(num);
                             if (flag != 1) {
                                 std::cout << "Fee cannot be negative\n";
@@ -893,6 +1068,12 @@ namespace interface{
                     do {
                         std::cout << "Enter Number of Subjects (1-10) : ";
                         std::cin >> num;
+                            if (cin.fail()){
+                                cin.clear();
+                                cin.ignore(1000,'\n');
+                                std::cout << "Enter a Number ! \n";
+                                continue;
+                            }
                         flag = validations::validate_number_of_subjects(num);
                         if (flag != 1) std::cout << "Must be between 1 and 10\n";
                     } while (flag != 1);

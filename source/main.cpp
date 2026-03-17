@@ -25,6 +25,7 @@ int main(){
 
     std::cout << "Welcome to the Student Record Management System \n";
     std::cout << "Total Records : " << recorddata::record::get_length() << endl;
+    std::cout << "Total Active Records : " << recorddata::record::get_length() - recorddata::record::no_of_deleted() << endl;
     
     do {
         std::cout << "What you Want to do ? \n";

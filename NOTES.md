@@ -30,13 +30,12 @@ collect2: error: ld returned 1 exit status
 
 # Problems : 
 
-- total number of records is giving including the deleted one 
-- in recent records it is giving 5 but if deleted then not showin them 
-- in show by roll no if not a valid roll no giving the recent record details 
-- if roll no is entered as char continous loop
-- space is exclude every where ther is cin string 
+- total number of records is giving including the deleted one 🟢
+- in recent records it is giving 5 but if deleted then not showin them 🛑
+- in show by roll no if not a valid roll no giving the recent record details 🟢
+- if roll no is entered as char continous loop 
+- space is exclude every where ther is cin string 🟢
 - in every tempalte no fistst subject name
-- templte is not overwriting 
 - if in delete record put the char it just loop 
 - the export by course doesnt show any message on success
 - add full address on opening a record and showing it 
