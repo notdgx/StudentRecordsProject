@@ -834,6 +834,7 @@ namespace interface{
                                     }
                                 data.student_number_of_subjects = 0;
                                 courset = true;
+                                std::cout << "Course Updated , Number of subject is Zero now , Update them\n";
                                 
                             }
                             else {
@@ -1093,6 +1094,25 @@ namespace interface{
 
                 case 12:
                 {
+                    if (templates::do_template_exist(data.student_course)){
+                        int i = 0;
+                        // for (int i = 0; i < data.student_number_of_subjects; i++) {
+                        do{
+                            std::cout << "Enter Subject " << i + 1 << " Obtained Marks : ";
+                            std::cin >> num;
+                            if (std::cin.fail()){
+                                std::cin.clear();
+                                std::cin.ignore(1000,'\n');
+                                std::cout<<"Enter A Number ! \n";
+                                continue;
+                            }
+                            i++;
+                            data.student_subjects[i].setsubobtainedmarks(num);
+
+                        }while(i<data.student_number_of_subjects);
+
+                    }
+                    
                     if (data.student_number_of_subjects == 0){ break;}
                     for (int i = 0; i < data.student_number_of_subjects; i++) {
                         std::cout << "Enter Subject " << i + 1 << " details\n";

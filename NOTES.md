@@ -41,13 +41,13 @@ collect2: error: ld returned 1 exit status
 - add full address on opening a record and showing it 🟢
 - on modifing record the details not saved 🟢 
 - and show record is showing the previous 🟢
-- and if new course updated then the subject details not showing any message if n = 0
-- can t change n when custom sourse added
-- make the subject details modifiable if not in template
-- and if then only obtained marks only
-- we can change n even if template is used
-- if the record is already a custom course the one can modify it 
-- whilw switching to template subjcets can be changed
+- and if new course updated then the subject details not showing any message if n = 0 🟢
+- can t change n when custom sourse added (not existed) 🟢
+- make the subject details modifiable if not in template (not existed) 🟢
+- and if then only obtained marks only 🟢
+- we can change n even if template is used (not existed) 🟢
+- if the record is already a custom course the one can modify it (not existed) 🟢
+- whilw switching to template subjcets can be changed (not existed) 🟢
 - 
 
 
