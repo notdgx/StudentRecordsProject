@@ -32,6 +32,7 @@ namespace recorddata{
         int update_data(datafields::fields & data);
         int delete_data(datafields::fields & data);
         int do_exists(datafields::fields & data);
+        int do_exists(int rollno);
         int get_length();
         int check_duplicate(datafields::fields & data);
         int init_record();

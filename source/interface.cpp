@@ -108,6 +108,7 @@ namespace interface{
     void show_template_by_name(){
         std::string name;
         int state;
+        cin.ignore(1000,'\n');
         do{
         std::cout << "Enter the course name :";
         // std::cin >> name;
@@ -131,6 +132,7 @@ namespace interface{
     void add_template(){
         std::string name;
         int n,state;
+        cin.ignore(1000,'\n');
         do {
         std::cout << "Enter the Template name :";
         std::getline(cin,name);
@@ -183,7 +185,7 @@ namespace interface{
 
         temp = recorddata::fetch::record_by_rollno(rollno);
 
-        if (temp.student_id == 0 ){
+        if (temp.student_id == 0 && recorddata::record::do_exists(rollno) != 1){
             std::cout << "Record Doesnt Exist \n";
         }
         else {
@@ -197,6 +199,7 @@ namespace interface{
     void delete_template(){
         std::string name;
         int state;
+        cin.ignore(1000,'\n');
         do{
         std::cout << "Enter the Template name :";
         std::getline(cin,name);
@@ -219,9 +222,10 @@ namespace interface{
         std::string name;
         int flag1,n,flag2,flag3;
         char replace;
+        cin.ignore(1000,'\n');
         do{
         std::cout << "Enter the Template name to modify :";
-        std::cin >> name;
+        // std::cin >> name;
         std::getline(cin,name);
         if (name.length() > 19){
             std::cout << "Template name too long \n";
@@ -293,6 +297,7 @@ namespace interface{
     void export_csv_by_course(){
         std::string name;
         int state;
+        std::cin.ignore(1000,'\n');
         do{
         std::cout << "Enter the Course name :";
         std::getline(cin,name);
@@ -311,10 +316,8 @@ namespace interface{
             std::cout << "Cant Create Files \n";
         }
         else if (state == 1){
-            break;
-        }
-        else{
             std::cout << "Data Files Exported \n";
+            break;
         }
         }while(true);
     }
@@ -340,21 +343,23 @@ namespace interface{
         bool courset = false;
         
 
+        std::cin.ignore();
         do {
             std::cout << "Enter Student Name : ";
-            std::cin.ignore();
             std::getline(std::cin, input);
             flag = validations::validate_name(input, sizeof(data.student_name));
             if      (flag == -1) std::cout << "Name too long\n";
             else if (flag ==  0) std::cout << "Not a Valid Name\n";
         } while (flag != 1);
-
+        
         strcpy(data.student_name, input.c_str());
-
-
+        
+        
+        // std::cin.ignore();
         int day, month, year;
         do {
 
+            flag = 3;
             std::cout << "Enter Student DOB  -> \n";
             std::cout << "Enter Day : ";
             std::cin >> day;
@@ -398,11 +403,11 @@ namespace interface{
         data.student_gender = ch;
 
     
+        std::cin.ignore();
         do{
 
         do {
             std::cout << "Enter Course : ";
-            std::cin.ignore();
             std::getline(std::cin, input);
             flag = validations::validate_course(input, sizeof(data.student_course));
             if (flag == -1) std::cout << "Course name too long\n";
@@ -536,6 +541,7 @@ namespace interface{
         strcpy(data.student_contacts.email, input.c_str());
 
 
+        std::cin.ignore();
         do {
             std::cout << "Enter Phone No (10 digits) : ";
             std::cin >> input;
@@ -555,9 +561,9 @@ namespace interface{
         std::string house, street, city, state, country, pincode;
 
         std::cout<<"Enter the Address Details : \n";
+        std::cin.ignore();
         do {
             std::cout << "Enter House : ";
-            std::cin.ignore();
             std::getline(std::cin, house);
             flag = validations::validate_address_field(house, sizeof(data.student_address.house));
             if (flag == -1) {
@@ -568,6 +574,7 @@ namespace interface{
             }
         } while (flag != 1);
 
+        // std::cin.ignore();
         do {
             std::cout << "Enter Street : ";
             std::getline(std::cin, street);
@@ -580,6 +587,7 @@ namespace interface{
             }
         } while (flag != 1);
 
+        // std::cin.ignore();
         do {
             std::cout << "Enter City : ";
             std::getline(std::cin, city);
@@ -592,6 +600,7 @@ namespace interface{
             }
         } while (flag != 1);
 
+        // std::cin.ignore();
         do {
             std::cout << "Enter State : ";
             std::getline(std::cin, state);
@@ -604,6 +613,7 @@ namespace interface{
             }
         } while (flag != 1);
 
+        // std::cin.ignore();
         do {
             std::cout << "Enter Country : ";
             std::getline(std::cin, country);
@@ -651,9 +661,10 @@ namespace interface{
     void open(){
         std::string input;
         int rollno,flag,choice,courset,num,exit=0;
-        datafields::fields data;
+        datafields::fields data{0};
         bool tempused;
         char ch;
+
 
         do{
         std::cout << "Enter the Student Roll no : ";
@@ -665,7 +676,8 @@ namespace interface{
                 continue;
             }
         data = recorddata::fetch::record_by_rollno(rollno);
-        if (data.student_id == 0){
+        // flag = recorddata::record::do_exists(rollno);
+        if (data.student_id == 0 || data.student_id  == -1){
             std::cout<< "The Record Doesnt Exists \n";
         }
         else{
@@ -739,9 +751,9 @@ namespace interface{
             switch (choice){
                 case 1:
                 {
+                    std::cin.ignore();
                         do {
                             std::cout << "Enter Student Name : ";
-                            std::cin.ignore();
                             std::getline(std::cin, input);
                             flag = validations::validate_name(input, sizeof(data.student_name));
                             if      (flag == -1) std::cout << "Name too long\n";
@@ -815,11 +827,11 @@ namespace interface{
 
                 case 4:
                 {
+                    std::cin.ignore();
                         do{
 
                             do {
                                 std::cout << "Enter Course : ";
-                                std::cin.ignore();
                                 std::getline(std::cin, input);
                                 flag = validations::validate_course(input, sizeof(data.student_course));
                                 if (flag == -1) std::cout << "Course name too long\n";
@@ -937,6 +949,7 @@ namespace interface{
 
                 case 8: 
                 {
+                    std::cin.ignore();
                         do {
                             std::cout << "Enter Student 's Email : ";
                             std::cin >> input;
@@ -957,6 +970,7 @@ namespace interface{
 
                 case 9:
                 {
+                    std::cin.ignore();
                         do {
                             std::cout << "Enter Phone No (10 digits) : ";
                             std::cin >> input;
@@ -982,9 +996,9 @@ namespace interface{
                     std::string house, street, city, state, country, pincode;
 
                     std::cout<<"Enter the Address Details : \n";
+                    std::cin.ignore();
                     do {
                         std::cout << "Enter House : ";
-                        std::cin.ignore();
                         std::getline(std::cin, house);
                         flag = validations::validate_address_field(house, sizeof(data.student_address.house));
                         if (flag == -1) {
@@ -995,6 +1009,7 @@ namespace interface{
                         }
                     } while (flag != 1);
 
+                    // std::cin.ignore(1000,'\n');
                     do {
                         std::cout << "Enter Street : ";
                         std::getline(std::cin, street);
@@ -1007,6 +1022,7 @@ namespace interface{
                         }
                     } while (flag != 1);
 
+                    // std::cin.ignore(1000,'\n');
                     do {
                         std::cout << "Enter City : ";
                         std::getline(std::cin, city);
@@ -1019,6 +1035,7 @@ namespace interface{
                         }
                     } while (flag != 1);
 
+                    // std::cin.ignore(1000,'\n');
                     do {
                         std::cout << "Enter State : ";
                         std::getline(std::cin, state);
@@ -1031,6 +1048,7 @@ namespace interface{
                         }
                     } while (flag != 1);
 
+                    // std::cin.ignore(1000,'\n');
                     do {
                         std::cout << "Enter Country : ";
                         std::getline(std::cin, country);
@@ -1043,6 +1061,7 @@ namespace interface{
                         }
                     } while (flag != 1);
 
+                    // std::cin.ignore();
                     do {
                         std::cout << "Enter Pincode (6 digits) : ";
                         std::cin >> pincode;
@@ -1110,9 +1129,10 @@ namespace interface{
                             data.student_subjects[i].setsubobtainedmarks(num);
 
                         }while(i<data.student_number_of_subjects);
+                        break;
 
                     }
-                    
+
                     if (data.student_number_of_subjects == 0){ break;}
                     for (int i = 0; i < data.student_number_of_subjects; i++) {
                         std::cout << "Enter Subject " << i + 1 << " details\n";
