@@ -847,6 +847,7 @@ namespace interface{
                                 data.student_number_of_subjects = 0;
                                 courset = true;
                                 std::cout << "Course Updated , Number of subject is Zero now , Update them\n";
+                                tempused = 0;
                                 
                             }
                             else {
@@ -1125,8 +1126,8 @@ namespace interface{
                                 std::cout<<"Enter A Number ! \n";
                                 continue;
                             }
-                            i++;
                             data.student_subjects[i].setsubobtainedmarks(num);
+                            i++;
 
                         }while(i<data.student_number_of_subjects);
                         break;
