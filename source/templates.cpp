@@ -15,19 +15,17 @@ namespace templates{
 
     // CREATE TEMPLATE 
 
-    int create_template(const std::string & template_name , int number_of_subjects = 10){
-
-
+int create_template(const std::string & template_name , int number_of_subjects = 10){
         ofstream file = file_exists_check(template_name ,number_of_subjects);
         if (file.is_open()){
-
             for (int i = 0 ; i < number_of_subjects ; i++){
+                std::cout << "\n────────────────────────────\n" ;
             std::cout << "Enter the Subject " << i+1 << " Details : \n" ;
-            std::cout << "-----------------------------\n\n" ;
+            std::cout << "────────────────────────────\n" ;
             Subject sub = templates::enter_and_return_sub();
             cin.ignore(1000,'\n');
             file.write(reinterpret_cast<char*>(& sub),sizeof(sub));
-            std::cout << "-----------------------------\n\n" ;
+            std::cout << "\n────────────────────────────\n\n" ;
             
         }
         return 1;
@@ -37,7 +35,7 @@ namespace templates{
         }
     }
 
-    // overloading 1 
+// overloading 1 
     int modify_template(const std::string & template_name){
         char replace;
         int index,n;
@@ -53,18 +51,16 @@ namespace templates{
         n = data.template_N_in_index;
             
         for (int i = 0 ; i < n ; i++){
+            std::cout << "\n────────────────────────────\n" ;
             std::cout << "Enter the Subject " << i+1 << " Details : \n" ;
-            std::cout << "-----------------------------\n\n" ;
+            std::cout << "────────────────────────────\n" ;
             std::cin.ignore(1000,'\n');
             Subject sub = templates::enter_and_return_sub();
             file1.write(reinterpret_cast<char*>(& sub),sizeof(sub));
-            std::cout << "-----------------------------\n\n" ;
+            std::cout << "\n────────────────────────────\n\n" ;
         }
             return 1;
-
-
     }
-
     // overloading 2
     int modify_template(const std::string & template_name, int n){
         char replace;
@@ -82,18 +78,17 @@ namespace templates{
         data.template_N_in_index = n;
             
         for (int i = 0 ; i < n ; i++){
+            std::cout << "\n────────────────────────────\n" ;
             std::cout << "Enter the Subject " << i+1 << " Details : \n" ;
-            std::cout << "-----------------------------\n\n" ;
+            std::cout << "────────────────────────────\n" ;
             std::cin.ignore(1000,'\n');
             Subject sub = templates::enter_and_return_sub();
             file1.write(reinterpret_cast<char*>(& sub),sizeof(sub));
-            std::cout << "-----------------------------\n\n" ;
+            std::cout << "\n────────────────────────────\n\n" ;
         }
         file1.close();
         templates::replace_template_index(template_name,n,index);
         return 1;
-
-
     }
 
 
@@ -104,15 +99,15 @@ namespace templates{
         ifstream file(path);
         char choice;
         if (file.is_open()){
-            cout << "Are you Sure You want to delete this template ? (y/n) :";
+            cout << "   -> Are you Sure You want to delete this template ? (y/n) :";
             cin >> choice ;
             if (choice == 'y' || choice == 'Y'){
                 filesystem::remove(path);
                 templates::delete_template_index(do_template_exist(template_name));
-                cout << "Template Deleted ‖ ";
+                cout << "      -> Template Deleted ‖ \n";
             }
             else{
-                cout << "Template Not Deleted";
+                cout << "      -> Template Not Deleted\n";
             }
         }
         
@@ -138,7 +133,7 @@ namespace templates{
 
         else if(file.is_open())
         {
-            cout << "Template Exists Do You want to replace it ? (y/n) :";
+            cout << "   -> Template Exists Do You want to replace it ? (y/n) :";
             cin >> replace ;
 
             if (replace == 'Y' || replace == 'y' ){
@@ -198,25 +193,22 @@ namespace templates{
 
     /// SHOW TEMPLATE 
     int show_template(const std::string & template_name){
-
         Subject * data = return_template_data(template_name);
         if (data == nullptr){
             return 0;
         }
-
-        cout << " ------------------------------------------------------------------------------------- " << endl;
-        cout << "| Template Name : " << std::left << std::setw(65) << template_name << "   |" << endl;
-        cout << " ------------------------------------------------------------------------------------- " << endl;
-        cout << "| Name                 | Code     | Total Marks    | Obt. Marks     | Credits         |"<<endl;
-        cout << " ------------------------------------------------------------------------------------- " << endl;
+        cout << "┌─────────────────────────────────────────────────────────────────────────────────────┐" << endl;
+        cout << "│ Template Name : " << std::left << std::setw(65) << template_name << "   │" << endl;
+        cout << "├──────────────────────┬──────────┬────────────────┬────────────────┬─────────────────┤" << endl;
+        cout << "│ Name                 │ Code     │ Total Marks    │ Obt. Marks     │ Credits         │" << endl;
+        cout << "├──────────────────────┼──────────┼────────────────┼────────────────┼─────────────────┤" << endl;
         
         for ( int i = 0 ; i < templates::give_number_of_subjects(template_name) ; i++){
-            cout << "| " << std::left << setw(20) << data[i].getsubname() << " | " << setw(8) << data[i].getsubcode() 
-            << " | " << setw(14) << data[i].getsubtotalmarks() << " | " << setw(14) << data[i].getsubobtainedmarks() 
-            << " | " << setw(14) << data[i].getsubcredits() << "  |" << endl;
+            cout << "│ " << std::left << setw(20) << data[i].getsubname() << " │ " << setw(8) << data[i].getsubcode() 
+            << " │ " << setw(14) << data[i].getsubtotalmarks() << " │ " << setw(14) << data[i].getsubobtainedmarks() 
+            << " │ " << setw(14) << data[i].getsubcredits() << "  │" << endl;
         }
-
-            cout << " ------------------------------------------------------------------------------------- " << endl;
+            cout << "└──────────────────────┴──────────┴────────────────┴────────────────┴─────────────────┘" << endl;
             delete[] data;
             return 1;
     }
@@ -234,11 +226,11 @@ namespace templates{
 
         cin.ignore(numeric_limits<streamsize>::max(), '\n'); // .
     do {
-        cout << "Enter the Subject Name: ";
+        cout << "   -> Enter the Subject Name: ";
         getline(cin, Esub_name);
 
         if (!Subject::verifyname(Esub_name)) {
-            cout << "Subject Name Too Long , try again"<< endl;
+            cout << "      -> Subject Name Too Long , try again"<< endl;
         } else {
             break;
         }
@@ -248,12 +240,12 @@ namespace templates{
         sub.setsubname(Esub_name);
 
         do{
-        std::cout << "Enter the Subject Code : " ;
+        std::cout << "   -> Enter the Subject Code : " ;
         std::cin >> Esub_code ;
             if (cin.fail()){
                 cin.clear();
                 cin.ignore(1000,'\n');
-                std::cout << "Enter a Number ! \n";
+                std::cout << "       -> Enter a Number ! \n";
                 continue;
             }
         sub.setsubcode(Esub_code);
@@ -261,12 +253,12 @@ namespace templates{
         }while(true);
 
         do{
-        std::cout << "Enter the Subject Total Marks : " ;
+        std::cout << "   -> Enter the Subject Total Marks : " ;
         std::cin >> Esub_totalmarks ;
             if (cin.fail()){
                 cin.clear();
                 cin.ignore(1000,'\n');
-                std::cout << "Enter a Number ! \n";
+                std::cout << "     -> Enter a Number ! \n";
                 continue;
             }
 
@@ -275,12 +267,12 @@ namespace templates{
         }while(true);
 
         do{
-        std::cout << "Enter the Subject Obtained Marks : " ;
+        std::cout << "   -> Enter the Subject Obtained Marks : " ;
         std::cin >> Esub_obtainedmarks ;
             if (cin.fail()){
                 cin.clear();
                 cin.ignore(1000,'\n');
-                std::cout << "Enter a Number ! \n";
+                std::cout << "     -> Enter a Number ! \n";
                 continue;
             }
 
@@ -289,12 +281,12 @@ namespace templates{
         }while(true);
 
         do{
-        std::cout << "Enter the Subject Credits : " ;
+        std::cout << "   -> Enter the Subject Credits : " ;
         std::cin >> Esub_credits ;
             if (cin.fail()){
                 cin.clear();
                 cin.ignore(1000,'\n');
-                std::cout << "Enter a Number ! \n";
+                std::cout << "     -> Enter a Number ! \n";
                 continue;
             }
         sub.setsubcredits(Esub_credits);
@@ -314,42 +306,33 @@ namespace templates{
         int size ;
         templates::templateindex data;
         ifstream file("templates/00_templateindex", ios::binary);
-
         if (!file.is_open()){
             return 0;
         }
-
         file.seekg(0,ios::end);
         size = file.tellg();
         file.seekg(0,ios::beg);
-
         if (size == 0){
             return 0;
         }
-
-        cout << " ------------------------------------- " << endl;
-        cout << "| Template Name      | No of Subjects |"<<endl;
-        cout << " ------------------------------------- " << endl;
-
-
+        cout << "┌──────────────────────┬────────────────┐" << endl;
+        cout << "│ Template Name        │ No of Subjects │" << endl;
+        cout << "├──────────────────────┼────────────────┤" << endl;
         while(file.read(reinterpret_cast<char *>(& data), sizeof(data))){
             
             if (data.template_name_in_index[0] == '\0' && data.template_N_in_index == 0){
-                // cout <<"| " << std::left << std::setw(20) << "DELETED TEMPLATE"
-                // << " | " << std::right << std::setw(12) << "0" << " | "<<endl;
-            continue;
+                continue;
             }
             
             else {
-                cout <<"| " << std::left << std::setw(20) << data.template_name_in_index
-                << " | " << std::right << std::setw(12) << data.template_N_in_index << " | "<<endl;
+                cout << "│ " << std::left << std::setw(20) << data.template_name_in_index
+                << " │ " << std::right << std::setw(14) << data.template_N_in_index << " │" << endl;
             }
             
         }
         
-        cout << " ------------------------------------- " << endl;
+        cout << "└──────────────────────┴────────────────┘" << endl;
         return 1;
-
     }
 
     

@@ -23,34 +23,42 @@ int main(){
     int choice , exit = 0;
 
 
-    std::cout << "Welcome to the Student Record Management System \n";
-    std::cout << "Total Records : " << recorddata::record::get_length() << endl;
-    std::cout << "Total Active Records : " << recorddata::record::get_length() - recorddata::record::no_of_deleted() << endl;
-    
-    do {
-        std::cout << "What you Want to do ? \n";
-        std::cout << "+-------------------------------------------------------------+\n";
-        std::cout << "1     ->     Show Recent Records \n";
-        std::cout << "2     ->     Show All Records \n";
-        std::cout << "3     ->     Show All Records Subject Details \n";
-        std::cout << "4     ->     Show Records by Roll No \n";
-        std::cout << "5     ->     Show Records Subject Details by Roll No \n";
-        std::cout << "6     ->     Show Status \n";
-        std::cout << "7     ->     Show Templates \n";
-        std::cout << "8     ->     Show Template Data\n";
-        std::cout << "9     ->     Add Templaate \n";
-        std::cout << "10    ->     Delete Templaate \n";
-        std::cout << "11    ->     Modify Templaate \n";
-        std::cout << "12    ->     Delete Record \n";
-        std::cout << "13    ->     Export All Records \n";
-        std::cout << "14    ->     Export Records by Course\n";
-        std::cout << "15    ->     Add Record \n";
-        std::cout << "16    ->     Open Record \n";
-        std::cout << "0     ->     Exit \n";
-        std::cout << "+-------------------------------------------------------------+\n";
-        
-        std::cout << "Enter Here \n";
+std::cout << "┌─────────────────────────────────────────────────────┐\n";
+std::cout << "│     Welcome to Student Record Management System     │\n";
+std::cout << "├─────────────────────────────────────────────────────┤\n";
+std::cout << "│  Total Records         : " << std::left << std::setw(27) << recorddata::record::get_length() << "│\n";
+std::cout << "│  Total Active Records  : " << std::left << std::setw(27) << recorddata::record::get_length() - recorddata::record::no_of_deleted() << "│\n";
+std::cout << "└─────────────────────────────────────────────────────┘\n";
+
+do {
+    std::cout << "\n┌──────┬──────────────────────────────────────────────┐\n";
+    std::cout << "│      │       What you Want to do ?                  │\n";
+    std::cout << "├──────┼──────────────────────────────────────────────┤\n";
+    std::cout << "│  1   │  Show Recent Records                         │\n";
+    std::cout << "│  2   │  Show All Records                            │\n";
+    std::cout << "│  3   │  Show All Records Subject Details            │\n";
+    std::cout << "│  4   │  Show Records by Roll No                     │\n";
+    std::cout << "│  5   │  Show Records Subject Details by Roll No     │\n";
+    std::cout << "│  6   │  Show Status                                 │\n";
+    std::cout << "├──────┼──────────────────────────────────────────────┤\n";
+    std::cout << "│  7   │  Show Templates                              │\n";
+    std::cout << "│  8   │  Show Template Data                          │\n";
+    std::cout << "│  9   │  Add Template                                │\n";
+    std::cout << "│  10  │  Delete Template                             │\n";
+    std::cout << "│  11  │  Modify Template                             │\n";
+    std::cout << "├──────┼──────────────────────────────────────────────┤\n";
+    std::cout << "│  12  │  Delete Record                               │\n";
+    std::cout << "│  13  │  Export All Records                          │\n";
+    std::cout << "│  14  │  Export Records by Course                    │\n";
+    std::cout << "│  15  │  Add Record                                  │\n";
+    std::cout << "│  16  │  Open Record                                 │\n";
+    std::cout << "├──────┼──────────────────────────────────────────────┤\n";
+    std::cout << "│   0  │  Exit                                        │\n";
+    std::cout << "└──────┴──────────────────────────────────────────────┘\n";
+
+    std::cout << "\nEnter Here -> ";
         std::cin>> choice;
+        std::cout<<'\n';
 
         switch (choice) {
             case 1:  interface::general::show_recent();           break;

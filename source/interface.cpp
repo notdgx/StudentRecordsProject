@@ -6,41 +6,41 @@ namespace interface{
 
         void show_recent(){
             int state;
-            std::cout << "The Recent Data : \n";
+            std::cout << "   -> The Recent Data : \n";
             state = recorddata::show::all_records(2);
             if (state == 0){
-                std::cout << "Data Doesnt Exist \n";
+                std::cout << "     -> Data Doesnt Exist \n";
             }
 
         }
         
         void show_all_sub(){
             int state;
-            std::cout << "All Subjects Data : \n";
+            std::cout << "   -> All Subjects Data : \n";
             state = recorddata::show::all_records(1);
             if (state == 0){
-                std::cout << "Data Doesnt Exist \n";
+                std::cout << "     -> Data Doesnt Exist \n";
             }
         }
 
 
         void show_all_stu(){
             int state;
-            std::cout << "All Students Data : \n";
+            std::cout << "   -> All Students Data : \n";
             state = recorddata::show::all_records(0);
             if (state == 0){
-                std::cout << "Data Doesnt Exist \n";
+                std::cout << "     -> Data Doesnt Exist \n";
             }
         }
         
         void show_sub_by_rollno(){ // course data of student by rollno
             int roll , state;
             do {
-            std::cout << "Enter  the Roll No : ";
+            std::cout << "   -> Enter  the Roll No : ";
             std::cin >> roll ;
             if (std::cin.fail()){
                 state = 2;
-                std::cout << "Enter a valid rollno ! \n";
+                std::cout << "     -> Enter a valid rollno ! \n";
                 std::cin.clear();
                 std::cin.ignore(1000,'\n');
                 continue;
@@ -52,7 +52,7 @@ namespace interface{
                 break;
             }
             else if (state == 0 || state == -1){
-                std::cout << "Record Doesnt Exist \n";
+                std::cout << "     -> Record Doesnt Exist \n";
             }
         }while(true);
         
@@ -62,12 +62,12 @@ namespace interface{
     void show_std_by_rollno(){ // student data  by rollno
         int roll , state;
         do {
-            std::cout << "Enter  the Roll No : ";
+            std::cout << "   -> Enter  the Roll No : ";
             std::cin >> roll ;
             // state = recorddata::show::single_by_rollno(roll,0);
             if (std::cin.fail()){
                 state = 2;
-                std::cout << "Enter a valid rollno ! \n";
+                std::cout << "     -> Enter a valid rollno ! \n";
                 std::cin.clear();
                 std::cin.ignore(1000,'\n');
                 continue;
@@ -80,7 +80,7 @@ namespace interface{
                 break;
             }
             else if (state == 0){
-                std::cout << "Record Doesnt Exist \n";
+                std::cout << "     -> Record Doesnt Exist \n";
             }
         } while(true);
         
@@ -91,7 +91,7 @@ namespace interface{
         int state;
         state = recorddata::show::session_data();
         if (state == 0 || state == -1){
-            std::cout << "Session Data Doesnt Exist \n";
+            std::cout << "     -> Session Data Doesnt Exist \n";
         }
     }
     
@@ -99,7 +99,7 @@ namespace interface{
         int state;
         state = templates::show_template_index();
         if (state == 0){
-            std::cout << "Template Index Doesnt Exist \n";
+            std::cout << "     -> Template Index Doesnt Exist \n";
         }
         
     }
@@ -110,16 +110,16 @@ namespace interface{
         int state;
         cin.ignore(1000,'\n');
         do{
-        std::cout << "Enter the course name :";
+        std::cout << "   -> Enter the course name :";
         // std::cin >> name;
         getline(cin,name);
         if (name.length() > 19){
-            std::cout << "Too Long";
+            std::cout << "     -> Too Long";
             continue;
         }
         state = templates::show_template(name);
         if (state == 0){
-            std::cout << "Template Doesnt Exist \n";
+            std::cout << "     -> Template Doesnt Exist \n";
         }
         else if (state == 1){
             break;
@@ -134,21 +134,21 @@ namespace interface{
         int n,state;
         cin.ignore(1000,'\n');
         do {
-        std::cout << "Enter the Template name :";
+        std::cout << "   -> Enter the Template name :";
         std::getline(cin,name);
         if (name.length() > 19){
-            std::cout << "Template name too long \n";
+            std::cout << "     -> Template name too long \n";
             continue;
         }
         break;
         } while(true);
 
         do {
-        std::cout << "Enter the no of subjects  :";
+        std::cout << "     -> Enter the no of subjects  :";
         std::cin >> n;
         if (std::cin.fail() || n > 10){
                 state = 2;
-                std::cout << "Enter valid number of Subjects ! \n";
+                std::cout << "         -> Enter valid number of Subjects ! \n";
                 std::cin.clear();
                 std::cin.ignore(1000,'\n');
         }
@@ -160,10 +160,10 @@ namespace interface{
         state = templates::create_template(name,n);
 
         if (state == -1){
-            std::cout << "Cant Create \n";
+            std::cout << "         -> Cant Create \n";
         }
         else if (state ==  1){
-            std::cout << "Template Created \n";
+            std::cout << "         -> Template Created \n";
         }
 
 
@@ -173,10 +173,10 @@ namespace interface{
         datafields::fields temp;
 
         do{
-        std::cout << "Enter the Roll No :";
+        std::cout << "   -> Enter the Roll No :";
         std::cin >> rollno;
             if (std::cin.fail()){
-                std::cout << "Enter a valid rollno ! \n";
+                std::cout << "     -> Enter a valid rollno ! \n";
                 std::cin.clear();
                 std::cin.ignore(1000,'\n');
                 continue;
@@ -186,11 +186,11 @@ namespace interface{
         temp = recorddata::fetch::record_by_rollno(rollno);
 
         if (temp.student_id == 0 && recorddata::record::do_exists(rollno) != 1){
-            std::cout << "Record Doesnt Exist \n";
+            std::cout << "     -> Record Doesnt Exist \n";
         }
         else {
             recorddata::record::delete_data(temp);
-            std::cout << "Record Deleted \n";
+            std::cout << "     -> Record Deleted \n";
             break;
         } 
             }while(true); 
@@ -201,15 +201,15 @@ namespace interface{
         int state;
         cin.ignore(1000,'\n');
         do{
-        std::cout << "Enter the Template name :";
+        std::cout << "   -> Enter the Template name :";
         std::getline(cin,name);
         if (name.length() > 19){
-            std::cout << "Template name too long \n";
+            std::cout << "     -> Template name too long \n";
             continue;
         }
         state = templates::do_template_exist(name);
         if (state == -1){
-            std::cout << "Template Doesnt Exist \n";
+            std::cout << "     -> Template Doesnt Exist \n";
         }
         else {
             templates::delete_template(name);
@@ -224,11 +224,11 @@ namespace interface{
         char replace;
         cin.ignore(1000,'\n');
         do{
-        std::cout << "Enter the Template name to modify :";
+        std::cout << "   -> Enter the Template name to modify :";
         // std::cin >> name;
         std::getline(cin,name);
         if (name.length() > 19){
-            std::cout << "Template name too long \n";
+            std::cout << "     -> Template name too long \n";
             continue;
         }
         break;  
@@ -236,19 +236,19 @@ namespace interface{
     
         flag1 = templates::do_template_exist(name);
         if (flag1 == -1){
-            std::cout << "Template doesnt Exist \n";
+            std::cout << "     -> Template doesnt Exist \n";
         }
 
         if (flag1 != -1){
-            std::cout << "Do you want to change Number of subjects ? (y/n) :";
+            std::cout << "     -> Do you want to change Number of subjects ? (y/n) :";
             std::cin >> replace ;
             if (replace == 'Y' || replace == 'y' ){
 
                 do {
-                    std::cout << "Enter the number of Subjects :";
+                    std::cout << "         -> Enter the number of Subjects :";
                     std::cin >> n;
                     if (cin.fail()){
-                        std::cout << "Enter valid number \n";
+                        std::cout << "             -> Enter valid number \n";
                         cin.clear();
                         cin.ignore(1000,'\n');
                     }
@@ -257,19 +257,19 @@ namespace interface{
                 
                 flag2 = templates::modify_template(name,n);
                 if (flag2 == 0){
-                    std::cout << "File not opened\n";
+                    std::cout << "             -> File not opened\n";
                 }
                 else if(flag2 == 1){
-                    std::cout << "Template Modified\n";
+                    std::cout << "             -> Template Modified\n";
                 }
             }
             else {
                 flag3 = templates::modify_template(name);
                 if (flag3 == 0){
-                    std::cout << "File not opened\n";
+                    std::cout << "             -> File not opened\n";
                 }
                 else if (flag3 == 1)
-                std::cout << "Template Modified\n";
+                std::cout << "             -> Template Modified\n";
             }
         }
 
@@ -282,13 +282,13 @@ namespace interface{
         state = recorddata::fetch::export_csv_all();
         
         if (state == -1){
-            std::cout << "Data Doesnt Exist \n";
+            std::cout << "   -> Data Doesnt Exist \n";
         }
         else if (state == 0){
-            std::cout << "Cant create Files \n";
+            std::cout << "   -> Cant create Files \n";
         }
         else if (state == 1){
-            std::cout << "Data Files Exported \n";
+            std::cout << "   -> Data Files Exported \n";
         }
 
         }
@@ -299,24 +299,24 @@ namespace interface{
         int state;
         std::cin.ignore(1000,'\n');
         do{
-        std::cout << "Enter the Course name :";
+        std::cout << "   -> Enter the Course name :";
         std::getline(cin,name);
         if (name.length() > 19){
-            std::cout << "Course name Too Long\n";
+            std::cout << "     -> Course name Too Long\n";
             continue;
         }
         state = recorddata::fetch::export_csv_by_course(name);
         if (state == -1){
-            std::cout << "Cant Fetch Data \n";
+            std::cout << "     -> Cant Fetch Data \n";
         }
         else if (state == 2){
-            std::cout << "Data Doesnt Exist \n";
+            std::cout << "     -> Data Doesnt Exist \n";
         }
         else if (state == 0){
-            std::cout << "Cant Create Files \n";
+            std::cout << "     -> Cant Create Files \n";
         }
         else if (state == 1){
-            std::cout << "Data Files Exported \n";
+            std::cout << "     -> Data Files Exported \n";
             break;
         }
         }while(true);
@@ -345,11 +345,11 @@ namespace interface{
 
         std::cin.ignore();
         do {
-            std::cout << "Enter Student Name : ";
+            std::cout << "   -> Enter Student Name : ";
             std::getline(std::cin, input);
             flag = validations::validate_name(input, sizeof(data.student_name));
-            if      (flag == -1) std::cout << "Name too long\n";
-            else if (flag ==  0) std::cout << "Not a Valid Name\n";
+            if      (flag == -1) std::cout << "    -> Name too long\n";
+            else if (flag ==  0) std::cout << "    -> Not a Valid Name\n";
         } while (flag != 1);
         
         strcpy(data.student_name, input.c_str());
@@ -360,33 +360,33 @@ namespace interface{
         do {
 
             flag = 3;
-            std::cout << "Enter Student DOB  -> \n";
-            std::cout << "Enter Day : ";
+            std::cout << "   -> Enter Student DOB  -> \n";
+            std::cout << "     -> Enter Day : ";
             std::cin >> day;
             if (cin.fail()){
                 cin.clear();
                 cin.ignore(1000,'\n');
-                std::cout << "Enter a Number ! \n";
+                std::cout << "         -> Enter a Number ! \n";
                 continue;
             }
-            std::cout << "Enter Month : ";
+            std::cout << "     -> Enter Month : ";
             std::cin >> month;
             if (cin.fail()){
                 cin.clear();
                 cin.ignore(1000,'\n');
-                std::cout << "Enter a Number ! \n";
+                std::cout << "         -> Enter a Number ! \n";
                 continue;
             }
-            std::cout << "Enter Year : ";
+            std::cout << "     -> Enter Year : ";
             std::cin >> year;
             if (cin.fail()){
                 cin.clear();
                 cin.ignore(1000,'\n');
-                std::cout << "Enter a Number ! \n";
+                std::cout << "         -> Enter a Number ! \n";
                 continue;
             }
             flag = validations::validate_dob(day, month, year);
-            if (flag != 1) std::cout << "Enter a valid DOB \n";
+            if (flag != 1) std::cout << "          -> Enter a valid DOB \n";
 
         } while (flag != 1);
 
@@ -394,10 +394,10 @@ namespace interface{
 
 
         do {
-            std::cout << "Enter Gender (M/F) : ";
+            std::cout << "   -> Enter Gender (M/F) : ";
             std::cin >> ch;
             flag = validations::validate_gender(ch);
-            if (flag != 1) std::cout << "Enter a valid Gender \n";
+            if (flag != 1) std::cout << "      -> Enter a valid Gender \n";
         } while (flag != 1);
 
         data.student_gender = ch;
@@ -407,11 +407,11 @@ namespace interface{
         do{
 
         do {
-            std::cout << "Enter Course : ";
+            std::cout << "   -> Enter Course : ";
             std::getline(std::cin, input);
             flag = validations::validate_course(input, sizeof(data.student_course));
-            if (flag == -1) std::cout << "Course name too long\n";
-            else if (flag ==  0) std::cout << "Enter a valid Course Name\n";
+            if (flag == -1) std::cout << "     -> Course name too long\n";
+            else if (flag ==  0) std::cout << "    -> Enter a valid Course Name\n";
             
         } while (flag != 1);
         
@@ -420,7 +420,7 @@ namespace interface{
             courset = true;
         }
         else {
-            std::cout << "Course Exist in Template , Do you want to use template ? (y/n) ";
+            std::cout << "     -> Course Exist in Template , Do you want to use template ? (y/n) ";
             std::cin >> ch ;
             if (ch == 'y' || ch =='Y'){
                 tempused = 1;
@@ -435,7 +435,7 @@ namespace interface{
                 
             }
             else {
-                std::cout << "Enter a different course name : \n";
+                std::cout << "         -> Enter a different course name : \n";
             }
 
         }
@@ -445,12 +445,12 @@ namespace interface{
 
 
         do {
-            std::cout << "Enter Section (A-Z) : ";
+            std::cout << "   -> Enter Section (A-Z) : ";
             std::cin >> ch;
 
             flag = validations::validate_section(ch);
             if (flag != 1) {
-                std::cout << "Section must be A-Z\n";
+                std::cout << "     -> Section must be A-Z\n";
             }
 
         } while (flag != 1);
@@ -463,16 +463,16 @@ namespace interface{
         if (tempused != 1){
 
         do {
-            std::cout << "Enter Number of Subjects : ";
+            std::cout << "   -> Enter Number of Subjects : ";
             std::cin >> num;
             if (cin.fail()){
                 cin.clear();
                 cin.ignore(1000,'\n');
-                std::cout << "Enter a Number ! \n";
+                std::cout << "     -> Enter a Number ! \n";
                 continue;
             }
             flag = validations::validate_number_of_subjects(num);
-            if (flag != 1) std::cout << "Must be between 1 and 10\n";
+            if (flag != 1) std::cout << "      -> Must be between 1 and 10\n";
         } while (flag != 1);
         data.student_number_of_subjects = num;
 
@@ -489,17 +489,17 @@ namespace interface{
 
 
         do {
-            std::cout << "Enter Enrollment Year : ";
+            std::cout << "\n   -> Enter Enrollment Year : ";
             std::cin >> num;
             if (cin.fail()){
                 cin.clear();
                 cin.ignore(1000,'\n');
-                std::cout << "Enter a Number ! \n";
+                std::cout << "     -> Enter a Number ! \n";
                 continue;
             }
             flag = validations::validate_enrollement_year(num);
             if (flag != 1) {
-                std::cout << "Invalid year\n";
+                std::cout << "     -> Invalid year\n";
             }
 
         } while (flag != 1);
@@ -508,17 +508,17 @@ namespace interface{
 
 
         do {
-            std::cout << "Enter Pending Fee : ";
+            std::cout << "   -> Enter Pending Fee : ";
             std::cin >> num;
             if (cin.fail()){
                 cin.clear();
                 cin.ignore(1000,'\n');
-                std::cout << "Enter a Number ! \n";
+                std::cout << "     -> Enter a Number ! \n";
                 continue;
             }
             flag = validations::validae_pending_fee(num);
             if (flag != 1) {
-                std::cout << "Fee cannot be negative\n";
+                std::cout << "     -> Fee cannot be negative\n";
             }
 
         } while (flag != 1);
@@ -527,14 +527,14 @@ namespace interface{
 
 
         do {
-            std::cout << "Enter Student 's Email : ";
+            std::cout << "   -> Enter Student 's Email : ";
             std::cin >> input;
             flag = validations::validate_email(input, sizeof(data.student_contacts.email));
             if (flag == -1) {
-                std::cout << "Email too long \n";
+                std::cout << "     -> Email too long \n";
             }
             else if (flag ==  0) {
-                std::cout << "Invalid email format\n";
+                std::cout << "     -> Invalid email format\n";
             }
 
         } while (flag != 1);
@@ -543,15 +543,15 @@ namespace interface{
 
         std::cin.ignore();
         do {
-            std::cout << "Enter Phone No (10 digits) : ";
+            std::cout << "   -> Enter Phone No (10 digits) : ";
             std::cin >> input;
 
             flag = validations::validate_phone_no(input);
             if (flag == -1){
-                std::cout << "Must be exactly 10 digits\n";
+                std::cout << "     -> Must be exactly 10 digits\n";
             }
             else if (flag ==  0) {
-                std::cout << "Only digits allowed\n";
+                std::cout << "     -> Only digits allowed\n";
             }
 
         } while (flag != 1);
@@ -560,81 +560,81 @@ namespace interface{
 
         std::string house, street, city, state, country, pincode;
 
-        std::cout<<"Enter the Address Details : \n";
+        std::cout<<"   -> Enter the Address Details : \n";
         std::cin.ignore();
         do {
-            std::cout << "Enter House : ";
+            std::cout << "         -> Enter House : ";
             std::getline(std::cin, house);
             flag = validations::validate_address_field(house, sizeof(data.student_address.house));
             if (flag == -1) {
-                std::cout << "Too long \n";
+                std::cout << "         -> Too long \n";
             }
             else if (flag ==  0) {
-                std::cout << "invalid Format \n";
+                std::cout << "         -> invalid Format \n";
             }
         } while (flag != 1);
 
         // std::cin.ignore();
         do {
-            std::cout << "Enter Street : ";
+            std::cout << "        -> Enter Street : ";
             std::getline(std::cin, street);
             flag = validations::validate_address_field(street, sizeof(data.student_address.street));
             if (flag == -1) {
-                std::cout << "Too long\n";
+                std::cout << "       -> Too long\n";
             }
             else if (flag ==  0) {
-                std::cout << "Invalid Format \n";
+                std::cout << "       -> Invalid Format \n";
             }
         } while (flag != 1);
 
         // std::cin.ignore();
         do {
-            std::cout << "Enter City : ";
+            std::cout << "     -> Enter City : ";
             std::getline(std::cin, city);
             flag = validations::validate_address_field(city, sizeof(data.student_address.city));
             if (flag == -1) {
-                std::cout << "Too long \n";
+                std::cout << "        -> Too long \n";
             }
             else if (flag ==  0) {
-                std::cout << "Invalid Format  \n";
+                std::cout << "        -> Invalid Format  \n";
             }
         } while (flag != 1);
 
         // std::cin.ignore();
         do {
-            std::cout << "Enter State : ";
+            std::cout << "       -> Enter State : ";
             std::getline(std::cin, state);
             flag = validations::validate_address_field(state, sizeof(data.student_address.state));
             if (flag == -1) {
-                std::cout << "Too long\n";
+                std::cout << "        -> Too long\n";
             }
             else if (flag ==  0) {
-                std::cout << "Invalid format \n";
+                std::cout << "        -> Invalid format \n";
             }
         } while (flag != 1);
 
         // std::cin.ignore();
         do {
-            std::cout << "Enter Country : ";
+            std::cout << "      -> Enter Country : ";
             std::getline(std::cin, country);
             flag = validations::validate_address_field(country, sizeof(data.student_address.country));
             if(flag == -1) {
-                std::cout << "Too long\n";
+                std::cout << "       -> Too long\n";
             }
             else if (flag ==  0) {
-                std::cout << "Invalid format \n";
+                std::cout << "     -> Invalid format \n";
             }
         } while (flag != 1);
 
         do {
-            std::cout << "Enter Pincode (6 digits) : ";
+            std::cout << "   -> Enter Pincode (6 digits) : ";
             std::cin >> pincode;
             flag = validations::validate_address_pincode(pincode);
             if (flag == -1) {
-                std::cout << "Must be exactly 6 digits\n";
+                std::cout << "     -> Must be exactly 6 digits\n";
             }
             else if (flag ==  0) {
-                std::cout << "Only digits are allowed\n";
+                std::cout << "     -> Only digits are allowed\n";
             }
         } while (flag != 1);
 
@@ -648,9 +648,9 @@ namespace interface{
 
         int result = recorddata::connect(data);
         if (result == 1) {
-            std::cout << "Student Record saved successfully\n";
+            std::cout << "         -> Student Record saved successfully\n";
         } else {
-            std::cout << "Failed to Save\n";
+            std::cout << "         -> Failed to Save\n";
         }
     }
 
@@ -667,22 +667,22 @@ namespace interface{
 
 
         do{
-        std::cout << "Enter the Student Roll no : ";
+        std::cout << "   -> Enter the Student Roll no : ";
         std::cin >> rollno ;
             if (cin.fail()){
                 cin.clear();
                 cin.ignore(1000,'\n');
-                std::cout << "Enter a Number ! \n";
+                std::cout << "     -> Enter a Number ! \n";
                 continue;
             }
         data = recorddata::fetch::record_by_rollno(rollno);
         // flag = recorddata::record::do_exists(rollno);
         if (data.student_id == 0 || data.student_id  == -1){
-            std::cout<< "The Record Doesnt Exists \n";
+            std::cout<< "      -> The Record Doesnt Exists \n";
         }
         else{
             
-            std::cout<< "Record Opened \n";
+            std::cout<< "      -> Record Opened \n";
             break;
         }
     } while(true);
@@ -691,17 +691,17 @@ namespace interface{
 
         recorddata::show::single_by_rollno(rollno,1);
         
-        std::cout << "What you want to do ? \n";
-        std::cout << "1 -> Modify Record \n";
-        std::cout << "2 -> Delete Record \n";
+        std::cout << "     -> What you want to do ? \n";
+        std::cout << "         -> 1 -> Modify Record \n";
+        std::cout << "         -> 2 -> Delete Record \n";
 
         do {
-        std::cout << "Enter Your Choice : ";
+        std::cout << "   -> Enter Your Choice : ";
         std::cin >> choice ;
             if (cin.fail()){
                 cin.clear();
                 cin.ignore(1000,'\n');
-                std::cout << "Enter a Number ! \n";
+                std::cout << "   -> Enter a Number ! \n";
                 continue;
             }
             break;
@@ -709,7 +709,7 @@ namespace interface{
         }while(true);
         
         if (choice == 2 ){
-            std::cout << "Record Deleted \n";
+            std::cout << "     -> Record Deleted \n";
             recorddata::record::delete_data(data);
         }
         else if (choice == 1){
@@ -717,31 +717,34 @@ namespace interface{
             do {
 
             
-            std::cout << "What you want to Modify ? \n";
-            std::cout << "1 -> Modify Name \n";
-            std::cout << "2 -> Modify DOB \n";
-            std::cout << "3 -> Modify Gender \n";
-            std::cout << "4 -> Modify Course \n";
-            std::cout << "5 -> Modify Section \n";
-            std::cout << "6 -> Modify Enrollement Year\n";
-            std::cout << "7 -> Modify Fee \n";
-            std::cout << "8 -> Modify Email \n";
-            std::cout << "9 -> Modify Phone No \n";
-            std::cout << "10 -> Modify Address \n";
-            std::cout << "11 -> Modify Number of Subjects \n";
-            std::cout << "12 -> Modify Subjects Details \n";
-            std::cout << "13 -> Show Record \n";
-
-            std::cout << "0 -> Save & Exit  \n";
-            std::cout << "14 -> Dont Save & Exit  \n";
+std::cout << "\n┌─────────────────────────────────────┐\n";
+std::cout << "│       What you want to Modify ?     │\n";
+std::cout << "├─────┬───────────────────────────────┤\n";
+std::cout << "│  1  │ Modify Name                   │\n";
+std::cout << "│  2  │ Modify DOB                    │\n";
+std::cout << "│  3  │ Modify Gender                 │\n";
+std::cout << "│  4  │ Modify Course                 │\n";
+std::cout << "│  5  │ Modify Section                │\n";
+std::cout << "│  6  │ Modify Enrollement Year       │\n";
+std::cout << "│  7  │ Modify Fee                    │\n";
+std::cout << "│  8  │ Modify Email                  │\n";
+std::cout << "│  9  │ Modify Phone No               │\n";
+std::cout << "│ 10  │ Modify Address                │\n";
+std::cout << "│ 11  │ Modify Number of Subjects     │\n";
+std::cout << "│ 12  │ Modify Subjects Details       │\n";
+std::cout << "├─────┼───────────────────────────────┤\n";
+std::cout << "│ 13  │ Show Record                   │\n";
+std::cout << "│  0  │ Save & Exit                   │\n";
+std::cout << "│ 14  │ Don't Save & Exit             │\n";
+std::cout << "└─────┴───────────────────────────────┘\n\n";
 
             do{
-            std::cout << "Enter Your Choice : ";
+            std::cout << "   -> Enter Your Choice : ";
             std::cin >> choice ;
                 if (cin.fail()){
                     cin.clear();
                     cin.ignore(1000,'\n');
-                    std::cout << "Enter a Number ! \n";
+                    std::cout << "     -> Enter a Number ! \n";
                     continue;
                 }
             break;
@@ -753,11 +756,11 @@ namespace interface{
                 {
                     std::cin.ignore();
                         do {
-                            std::cout << "Enter Student Name : ";
+                            std::cout << "     -> Enter Student Name : ";
                             std::getline(std::cin, input);
                             flag = validations::validate_name(input, sizeof(data.student_name));
-                            if      (flag == -1) std::cout << "Name too long\n";
-                            else if (flag ==  0) std::cout << "Not a Valid Name\n";
+                            if      (flag == -1) std::cout << "        -> Name too long\n";
+                            else if (flag ==  0) std::cout << "        -> Not a Valid Name\n";
                         } while (flag != 1);
 
                         strcpy(data.student_name, input.c_str());
@@ -772,33 +775,33 @@ namespace interface{
                         int day, month, year;
                         do {
 
-                            std::cout << "Enter Student DOB  : \n";
-                            std::cout << "Enter Day : ";
+                            std::cout << "     -> Enter Student DOB  : \n";
+                            std::cout << "         -> Enter Day : ";
                             std::cin >> day;
                             if (cin.fail()){
                                 cin.clear();
                                 cin.ignore(1000,'\n');
-                                std::cout << "Enter a Number ! \n";
+                                std::cout << "             -> Enter a Number ! \n";
                                 continue;
                             }
-                            std::cout << "Enter Month : ";
+                            std::cout << "         -> Enter Month : ";
                             std::cin >> month;
                             if (cin.fail()){
                                 cin.clear();
                                 cin.ignore(1000,'\n');
-                                std::cout << "Enter a Number ! \n";
+                                std::cout << "             -> Enter a Number ! \n";
                                 continue;
                             }
-                            std::cout << "Enter Year : ";
+                            std::cout << "         -> Enter Year : ";
                             std::cin >> year;
                             if (cin.fail()){
                                 cin.clear();
                                 cin.ignore(1000,'\n');
-                                std::cout << "Enter a Number ! \n";
+                                std::cout << "             -> Enter a Number ! \n";
                                 continue;
                             }
                             flag = validations::validate_dob(day, month, year);
-                            if (flag != 1) std::cout << "Enter a valid DOB \n";
+                            if (flag != 1) std::cout << "              -> Enter a valid DOB \n";
 
                         } while (flag != 1);
 
@@ -812,10 +815,10 @@ namespace interface{
                 case 3:
                 {
                         do {
-                            std::cout << "Enter Gender (M/F) : ";
+                            std::cout << "     -> Enter Gender (M/F) : ";
                             std::cin >> ch;
                             flag = validations::validate_gender(ch);
-                            if (flag != 1) std::cout << "Enter a valid Gender \n";
+                            if (flag != 1) std::cout << "          -> Enter a valid Gender \n";
                         } while (flag != 1);
 
                         data.student_gender = ch;
@@ -831,11 +834,11 @@ namespace interface{
                         do{
 
                             do {
-                                std::cout << "Enter Course : ";
+                                std::cout << "     -> Enter Course : ";
                                 std::getline(std::cin, input);
                                 flag = validations::validate_course(input, sizeof(data.student_course));
-                                if (flag == -1) std::cout << "Course name too long\n";
-                                else if (flag ==  0) std::cout << "Enter a valid Course Name\n";
+                                if (flag == -1) std::cout << "         -> Course name too long\n";
+                                else if (flag ==  0) std::cout << "        -> Enter a valid Course Name\n";
                                 
                             } while (flag != 1);
                             
@@ -846,11 +849,12 @@ namespace interface{
                                     }
                                 data.student_number_of_subjects = 0;
                                 courset = true;
-                                std::cout << "Course Updated , Number of subject is Zero now , Update them\n";
+                                std::cout << "             -> Course Updated , Number of subject is Zero now , Update them\n";
+                                tempused = 0;
                                 
                             }
                             else {
-                                std::cout << "Course Exist in Template , Do you want to use template ? (y/n) ";
+                                std::cout << "             -> Course Exist in Template , Do you want to use template ? (y/n) ";
                                 std::cin >> ch ;
                                 if (ch == 'y' || ch =='Y'){
                                     tempused = 1;
@@ -868,7 +872,7 @@ namespace interface{
                                     
                                 }
                                 else {
-                                    std::cout << "Enter a different course name : \n";
+                                    std::cout << "             -> Enter a different course name : \n";
                                 }
 
                             }
@@ -882,12 +886,12 @@ namespace interface{
                 case 5:
                 {
                         do {
-                            std::cout << "Enter Section (A-Z) : ";
+                            std::cout << "     -> Enter Section (A-Z) : ";
                             std::cin >> ch;
 
                             flag = validations::validate_section(ch);
                             if (flag != 1) {
-                                std::cout << "Section must be A-Z\n";
+                                std::cout << "         -> Section must be A-Z\n";
                             }
 
                         } while (flag != 1);
@@ -901,17 +905,17 @@ namespace interface{
                 case 6:
                 {
                         do {
-                            std::cout << "Enter Enrollment Year : ";
+                            std::cout << "     -> Enter Enrollment Year : ";
                             std::cin >> num;
                             if (cin.fail()){
                                 cin.clear();
                                 cin.ignore(1000,'\n');
-                                std::cout << "Enter a Number ! \n";
+                                std::cout << "         -> Enter a Number ! \n";
                                 continue;
                             }
                             flag = validations::validate_enrollement_year(num);
                             if (flag != 1) {
-                                std::cout << "Invalid year\n";
+                                std::cout << "         -> Invalid year\n";
                             }
 
                         } while (flag != 1);
@@ -926,17 +930,17 @@ namespace interface{
                 {
                 
                         do {
-                            std::cout << "Enter Pending Fee : ";
+                            std::cout << "     -> Enter Pending Fee : ";
                             std::cin >> num;
                             if (cin.fail()){
                                 cin.clear();
                                 cin.ignore(1000,'\n');
-                                std::cout << "Enter a Number ! \n";
+                                std::cout << "         -> Enter a Number ! \n";
                                 continue;
                             }
                             flag = validations::validae_pending_fee(num);
                             if (flag != 1) {
-                                std::cout << "Fee cannot be negative\n";
+                                std::cout << "         -> Fee cannot be negative\n";
                             }
 
                         } while (flag != 1);
@@ -951,14 +955,14 @@ namespace interface{
                 {
                     std::cin.ignore();
                         do {
-                            std::cout << "Enter Student 's Email : ";
+                            std::cout << "     -> Enter Student 's Email : ";
                             std::cin >> input;
                             flag = validations::validate_email(input, sizeof(data.student_contacts.email));
                             if (flag == -1) {
-                                std::cout << "Email too long \n";
+                                std::cout << "         -> Email too long \n";
                             }
                             else if (flag ==  0) {
-                                std::cout << "Invalid email format\n";
+                                std::cout << "         -> Invalid email format\n";
                             }
 
                         } while (flag != 1);
@@ -972,15 +976,15 @@ namespace interface{
                 {
                     std::cin.ignore();
                         do {
-                            std::cout << "Enter Phone No (10 digits) : ";
+                            std::cout << "     -> Enter Phone No (10 digits) : ";
                             std::cin >> input;
 
                             flag = validations::validate_phone_no(input);
                             if (flag == -1){
-                                std::cout << "Must be exactly 10 digits\n";
+                                std::cout << "         -> Must be exactly 10 digits\n";
                             }
                             else if (flag ==  0) {
-                                std::cout << "Only digits allowed\n";
+                                std::cout << "         -> Only digits allowed\n";
                             }
 
                         } while (flag != 1);
@@ -995,82 +999,82 @@ namespace interface{
                 {
                     std::string house, street, city, state, country, pincode;
 
-                    std::cout<<"Enter the Address Details : \n";
+                    std::cout<<"       -> Enter the Address Details : \n";
                     std::cin.ignore();
                     do {
-                        std::cout << "Enter House : ";
+                        std::cout << "         -> Enter House : ";
                         std::getline(std::cin, house);
                         flag = validations::validate_address_field(house, sizeof(data.student_address.house));
                         if (flag == -1) {
-                            std::cout << "Too long \n";
+                            std::cout << "             -> Too long \n";
                         }
                         else if (flag ==  0) {
-                            std::cout << "invalid Format \n";
+                            std::cout << "             -> invalid Format \n";
                         }
                     } while (flag != 1);
 
                     // std::cin.ignore(1000,'\n');
                     do {
-                        std::cout << "Enter Street : ";
+                        std::cout << "     -> Enter Street : ";
                         std::getline(std::cin, street);
                         flag = validations::validate_address_field(street, sizeof(data.student_address.street));
                         if (flag == -1) {
-                            std::cout << "Too long\n";
+                            std::cout << "         -> Too long\n";
                         }
                         else if (flag ==  0) {
-                            std::cout << "Invalid Format \n";
+                            std::cout << "         -> Invalid Format \n";
                         }
                     } while (flag != 1);
 
                     // std::cin.ignore(1000,'\n');
                     do {
-                        std::cout << "Enter City : ";
+                        std::cout << "     -> Enter City : ";
                         std::getline(std::cin, city);
                         flag = validations::validate_address_field(city, sizeof(data.student_address.city));
                         if (flag == -1) {
-                            std::cout << "Too long \n";
+                            std::cout << "         -> Too long \n";
                         }
                         else if (flag ==  0) {
-                            std::cout << "Invalid Format  \n";
+                            std::cout << "         -> Invalid Format  \n";
                         }
                     } while (flag != 1);
 
                     // std::cin.ignore(1000,'\n');
                     do {
-                        std::cout << "Enter State : ";
+                        std::cout << "     -> Enter State : ";
                         std::getline(std::cin, state);
                         flag = validations::validate_address_field(state, sizeof(data.student_address.state));
                         if (flag == -1) {
-                            std::cout << "Too long\n";
+                            std::cout << "         -> Too long\n";
                         }
                         else if (flag ==  0) {
-                            std::cout << "Invalid format \n";
+                            std::cout << "         -> Invalid format \n";
                         }
                     } while (flag != 1);
 
                     // std::cin.ignore(1000,'\n');
                     do {
-                        std::cout << "Enter Country : ";
+                        std::cout << "     -> Enter Country : ";
                         std::getline(std::cin, country);
                         flag = validations::validate_address_field(country, sizeof(data.student_address.country));
                         if(flag == -1) {
-                            std::cout << "Too long\n";
+                            std::cout << "         -> Too long\n";
                         }
                         else if (flag ==  0) {
-                            std::cout << "Invalid format \n";
+                            std::cout << "         -> Invalid format \n";
                         }
                     } while (flag != 1);
 
                     // std::cin.ignore();
                     do {
-                        std::cout << "Enter Pincode (6 digits) : ";
+                        std::cout << "     -> Enter Pincode (6 digits) : ";
                         std::cin >> pincode;
                         flag = validations::validate_address_pincode(pincode);
                         if (flag == -1) {
-                            std::cout << "Must be exactly 6 digits\n";
+                            std::cout << "         -> Must be exactly 6 digits\n";
                         }
                         else if (flag ==  0) {
-                            std::cout << "Only digits are allowed\n";
+                            std::cout << "         -> Only digits are allowed\n";
                         }
                     } while (flag != 1);
 
@@ -1088,20 +1092,20 @@ namespace interface{
                 case 11:
                 {
                     if (templates::do_template_exist(data.student_course) != -1 || tempused == 1){
-                        std::cout << "Cant change Subjects as it is a template \n";
+                        std::cout << "         -> Cant change Subjects as it is a template \n";
                         break;
                     }
                     do {
-                        std::cout << "Enter Number of Subjects (1-10) : ";
+                        std::cout << "     -> Enter Number of Subjects (1-10) : ";
                         std::cin >> num;
                             if (cin.fail()){
                                 cin.clear();
                                 cin.ignore(1000,'\n');
-                                std::cout << "Enter a Number ! \n";
+                                std::cout << "         -> Enter a Number ! \n";
                                 continue;
                             }
                         flag = validations::validate_number_of_subjects(num);
-                        if (flag != 1) std::cout << "Must be between 1 and 10\n";
+                        if (flag != 1) std::cout << "          -> Must be between 1 and 10\n";
                     } while (flag != 1);
                     data.student_number_of_subjects = num;
 
@@ -1117,16 +1121,16 @@ namespace interface{
                         int i = 0;
                         // for (int i = 0; i < data.student_number_of_subjects; i++) {
                         do{
-                            std::cout << "Enter Subject " << i + 1 << " Obtained Marks : ";
+                            std::cout << "     -> Enter Subject " << i + 1 << " Obtained Marks : ";
                             std::cin >> num;
                             if (std::cin.fail()){
                                 std::cin.clear();
                                 std::cin.ignore(1000,'\n');
-                                std::cout<<"Enter A Number ! \n";
+                                std::cout<<"           -> Enter A Number ! \n";
                                 continue;
                             }
-                            i++;
                             data.student_subjects[i].setsubobtainedmarks(num);
+                            i++;
 
                         }while(i<data.student_number_of_subjects);
                         break;
@@ -1135,7 +1139,7 @@ namespace interface{
 
                     if (data.student_number_of_subjects == 0){ break;}
                     for (int i = 0; i < data.student_number_of_subjects; i++) {
-                        std::cout << "Enter Subject " << i + 1 << " details\n";
+                        std::cout << "     -> Enter Subject " << i + 1 << " details\n";
                         data.student_subjects[i] = templates::enter_and_return_sub();
                     }
                     
@@ -1144,7 +1148,7 @@ namespace interface{
                 
                 case 0:
                 {
-                    std::cout << "Saved \n";
+                    std::cout << "   -> Saved \n";
                     recorddata::connect(data);
                     exit = 1;
                     break;
@@ -1159,14 +1163,14 @@ namespace interface{
                 
                 case 14:
                 {
-                    std::cout << "Data not Saved\n";
+                    std::cout << "   -> Data not Saved\n";
                     exit = 1;
                     break;
                 }
 
                 default :
                 {
-                    std::cout << "Not a Valid Option \n";
+                    std::cout << "   -> Not a Valid Option \n";
                     break;
                 }
 
