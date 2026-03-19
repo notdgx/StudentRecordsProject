@@ -2,6 +2,8 @@
 
 A C++ command-line application for managing student records, subjects, templates, and can exports data to CSV
 
+> NOTE : make sure that you shoud have `files`  , `templates` , `export` folder to work, and give run executable permissions if not compiling 
+
 ## Features
 
 - Add, open, modify, and delete student records
