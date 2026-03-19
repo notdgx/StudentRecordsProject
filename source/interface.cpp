@@ -660,9 +660,10 @@ namespace interface{
 
     void open(){
         std::string input;
-        int rollno,flag,choice,courset,num,exit=0;
+        int rollno,flag,choice,courset=0,num,exit=0;
         datafields::fields data{0};
-        bool tempused;
+        datafields::fields original_data{0};
+        bool tempused = false;
         char ch;
 
 
@@ -683,6 +684,7 @@ namespace interface{
         else{
             
             std::cout<< "      -> Record Opened \n";
+            original_data = data;
             break;
         }
     } while(true);
@@ -831,6 +833,7 @@ std::cout << "└─────┴───────────────
                 case 4:
                 {
                     std::cin.ignore();
+                        courset = false;
                         do{
 
                             do {
@@ -1148,8 +1151,31 @@ std::cout << "└─────┴───────────────
                 
                 case 0:
                 {
-                    std::cout << "   -> Saved \n";
-                    recorddata::connect(data);
+                    if (courset == 1){
+                        int created = recorddata::connect(data);
+                        if (created == 1){
+                            int deleted = recorddata::record::delete_data(original_data);
+                            if (deleted == 1){
+                                std::cout << "   -> Saved as new record and deleted old record\n";
+                            }
+                            else {
+                                std::cout << "   -> New record created, but failed to delete old record\n";
+                            }
+                        }
+                        else {
+                            std::cout << "   -> Failed to save new record\n";
+                        }
+                    }
+                    else {
+                        int updated = recorddata::record::update_data(data);
+                        if (updated == 1){
+                            std::cout << "   -> Record updated\n";
+                        }
+                        else {
+                            std::cout << "   -> Failed to update record\n";
+                        }
+                    }
+
                     exit = 1;
                     break;
                 }
