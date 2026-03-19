@@ -1,5 +1,36 @@
+# MAIN 
+
+- Main interface options work by input the choice  
+
+```
+┌──────┬──────────────────────────────────────────────┐
+|  1   │  Show Recent Records                         │
+│  2   │  Show All Records                            │
+│  3   │  Show All Records Subject Details            │
+│  4   │  Show Records by Roll No                     │
+│  5   │  Show Records Subject Details by Roll No     │
+│  6   │  Show Status                                 │
+├──────┼──────────────────────────────────────────────┤
+│  7   │  Show Templates                              │
+│  8   │  Show Template Data                          │
+│  9   │  Add Template                                │
+│  10  │  Delete Template                             │
+│  11  │  Modify Template                             │
+├──────┼──────────────────────────────────────────────┤
+│  12  │  Delete Record                               │
+│  13  │  Export All Records                          │
+│  14  │  Export Records by Course                    │
+│  15  │  Add Record                                  │
+│  16  │  Open Record                                 │
+├──────┼──────────────────────────────────────────────┤
+│   0  │  Exit                                        |
+└──────┴──────────────────────────────────────────────┘
+```
+
+
 
 # Interface Options
+
 
 ## general 
 
@@ -85,14 +116,9 @@
 - `int student_id_A = 1;   `
 - `int rollno_assigner_initial = 1000;`
 
+
 # Functions 
 
-
-
-## Constructos
-
-- Create Student Record `CUSTOM `
-- Create Student Record `TEMPLATE` 
 
 ## Setters 
 
@@ -151,7 +177,9 @@
 
 
 ### Template Index 
+
 	- Modifing
+
 		- `void add_template_index(const std::string & template_name , int number_of_subjects)` : add tempalte index , if already exist do nohing 
 		- `int do_template_exist(const std::string & template_name)` : if exists return the index and if not then -1
 		- `void replace_template_index(const std::string & template_name , int number_of_subjects , int index)` :  if replaces the index nmae the index must be valid
@@ -254,6 +282,9 @@
 
 - `int session_data()` : reads the data from session file and display the sessioon student_id_A the rollnoinit , the struct of course and current roll no 
 
+- `int single_by_rollno(int rollno,int flag = 0)` : Prints data on base of flag 1, 2 , 3  by rollno 
+- `int single_by_rollno(datafields::fields data,int flag = 0)` : Prints data on base of flag 1, 2 , 3 by data
+
 
 
 
@@ -270,20 +301,43 @@
 ## -> Subjects `Subject` : `class`
 
 - get sub 
-	- sub.get name 
-	- sub.get code
-	- sub.get total marks 
-	- sub.get obtained marks 
-	- sub.get credits 
+	- get name 
+	- get code
+	- get total marks 
+	- get obtained marks 
+	- get credits 
 
-- change sub 
-	- sub.change name 
-	- sub.change code
-	- sub.change total marks 
-	- sub.change obtained marks 
-	- sub.change credits 
+- set  sub 
+	- set name 
+	- set code
+	- set total marks 
+	- set obtained marks 
+	- set credits 
 
 - `static bool verifyname(const string & name)`: returns true if size < 20 else false
 
 ## Validations 
 
+- `int validate_name(std::string name, int size)` : checks if name size is < size , returns -1 if too long, 0 if contains not valid  characters, 1 if valid
+
+- `int validate_dob(int day, int month, int year)` : validates DOB returns 1 on success
+
+- `int validate_gender(char gender)` : checks if gender is 'M' or 'F' — returns 1 if valid else 0 
+
+- `int validate_course(const std::string & course, int size)` : checks if course is less than size limit  , returns -1 if too long, 0 if contains not valid characters, 1 if valid
+
+- `int validate_section(const char & section)` : checks if section is an uppercase letter A–Z , returns 1 if valid else 0 
+
+- `int validate_number_of_subjects(int n)` : checks if number of subjects is between 0 and 10 , returns 1 if valid eles 0 
+
+- `int validate_enrollement_year(int year)` : validates enrollment year — returns 1 
+
+- `int validae_pending_fee(int fee)` : checks if pending fee is>= 0 , returns 1 if valid else 0 
+
+- `int validate_email(const std::string & email, int size)` : checks if email fits in size limit  returns -1 if too long, 0 if contains characters outside a-z A-Z @ . _ -, 1 if valid
+
+- `int validate_phone_no(const std::string & phone_no)` : checks if phone number is exactly 10 digits , returns -1 if wrong length, 0 if not numbers , 1 if valid
+
+- `int validate_address_field(const std::string & address_field, int size)` : checks if address field fits in size ,  returns -1 if long, 0 if contains characters outside a-z A-Z 0-9 space comma, 1 if valid
+
+- `int validate_address_pincode(const std::string & pincode)` : checks if pincode is exactly 6 digits — returns -1 if wrong length, 0 if contains non-digit characters, 1 if valid
